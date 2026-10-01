@@ -9,7 +9,8 @@ free?
 signals that held up are the ones A-shares do not have — the perpetual **funding rate**
 and **retail positioning** — plus a low-price **range** factor, and they pay only in a
 market-neutral form (spot long basket, perpetual index short). After publication the
-combination returned +4.6% in June 2026 and −6.9% in July 2026.
+combination returned +4.6% in June 2026, −6.9% in July and −4.0% in August (−6.5% over
+the three months), so it has not made money out of sample so far.
 
 Evidence grade: **backtest and out-of-sample backtest** (association). Nothing here is
 live trading or investment advice.
@@ -21,7 +22,7 @@ live trading or investment advice.
 | Spot and USDT-margined perpetual 1-minute klines, including taker-buy volume | Binance public dumps, `data.binance.vision` |
 | Funding rates (monthly files), open interest and long/short ratios (daily) | `data.binance.vision` |
 | Cross-exchange check: daily OHLCV and funding | OKX via `ccxt` |
-| Panel | 105 coins × 730 days, 2024-06 to 2026-05 (extended to 806 days in the updates) |
+| Panel | 105 coins × 730 days, 2024-06 to 2026-05 (extended to 851 days, through 2026-09-29, in the updates) |
 
 Raw data are not in this repository; `binance_pipeline.py`, `perp_pipeline.py`,
 `fetch_okx.py` and `update_data.py` download them.
@@ -72,10 +73,25 @@ The factors are cross-sectional ranks with no fitted parameters, so every day af
 |---|---|---|---|
 | [`UPDATE_2026-07.md`](UPDATE_2026-07.md) | June 2026 (30 days) | **+4.6%**, max drawdown −2.0% | Funding reversed in the June sell-off (new-window Sharpe −1.76; its short leg failed); retail ratio and range strengthened |
 | [`UPDATE_2026-08.md`](UPDATE_2026-08.md) | July 2026 (31 days) | **−6.9%**, max drawdown −5.6% | Range and retail ratio turned negative; open-interest change became the strongest factor year to date |
+| [`UPDATE_2026-09.md`](UPDATE_2026-09.md) | August 2026 (31 days); single factors through 2026-09-28 | **−4.0%** | Altcoins rallied (+21% in August, +35% in September); funding's short leg failed again (−10.1% in August); range lost in both months |
 
-The market-neutral form is no longer positive in every window, and the recipe needs
-re-estimating. One or two months of data say little about Sharpe ratios; the updates
-report cumulative returns and day counts instead.
+![Post-publication returns](equity_postpub.png)
+
+Over June–August (92 days) the composite returned **−6.5%** with a maximum drawdown of
+−11.9%, slightly deeper than the −11.5% of its whole pre-publication backtest (515 days).
+Of its three components, only the retail ratio is positive since publication (+11.8%
+long–short through September); funding is −13.4%, almost all of it from the short leg
+(its long leg alone is +5.7%), and range is −9.7%. September's funding file is published
+in early October, so the composite stops at 2026-08-31. The recipe has not been re-fitted:
+re-weighting on four months of data would be fitting to noise.
+
+A data note: Binance's QNT and SAGA perpetuals made one-sided moves in late September
+(QNT closed at about 5× its OKX price), so September figures for the broad-universe
+factors are unreliable; the large-coin factors and the composite do not include these
+coins. Major-coin closes match OKX within 0.04%.
+
+One to four months of data say little about Sharpe ratios; the updates report cumulative
+returns and day counts instead.
 
 ## Limitations
 
@@ -99,7 +115,8 @@ python backtest_real.py         # funding accrual, long-only and decomposition
 python oos_validate.py          # split-sample, parameter and rolling checks
 python oos_okx.py               # OKX cross-exchange check
 python deploy_spot.py           # deliverable composite
-python update_data.py all && python report_windows.py   # post-publication windows
+python update_data.py all && python report_postpub.py   # post-publication windows and months
+python make_charts_postpub.py                           # equity_postpub.png
 ```
 
 `live_monitor.py` serves a local dashboard (`dashboard.html`, preview in
@@ -108,10 +125,10 @@ python update_data.py all && python report_windows.py   # post-publication windo
 ## Files
 
 The research write-ups are in Chinese: [`README_zh.md`](README_zh.md) (full detail),
-[`REPORT.md`](REPORT.md), [`UPDATE_2026-07.md`](UPDATE_2026-07.md) and
-[`UPDATE_2026-08.md`](UPDATE_2026-08.md). Result tables are in the CSV files at the top
+[`REPORT.md`](REPORT.md), [`UPDATE_2026-07.md`](UPDATE_2026-07.md),
+[`UPDATE_2026-08.md`](UPDATE_2026-08.md) and [`UPDATE_2026-09.md`](UPDATE_2026-09.md). Result tables are in the CSV files at the top
 level; figures are the PNG files.
 
-Research period: June–August 2026. Source series: Kaiyuan Securities (开源证券)
+Research period: June–September 2026. Source series: Kaiyuan Securities (开源证券)
 financial-engineering *Market Microstructure Research* series; the reports themselves
 are not redistributed here.

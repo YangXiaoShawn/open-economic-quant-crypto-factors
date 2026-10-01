@@ -143,6 +143,17 @@ def update_klines(sym, end_day):
     frames = []
     for ch in plan_chunks(last + dt.timedelta(days=1), end_day):
         raw = _get(kline_url(sym, ch))
+        if raw is None and ch[0] == "M":
+            # 刚结束的月份: monthly zip 要月末后几天才发布, 未发布前改走 daily
+            d = dt.date(ch[1], ch[2], 1)
+            month_end = dt.date(ch[1] + (ch[2] == 12), ch[2] % 12 + 1, 1) - dt.timedelta(days=1)
+            if month_end >= end_day - dt.timedelta(days=40):
+                while d <= month_end:
+                    r = _get(kline_url(sym, ("D", d)))
+                    if r is not None:
+                        frames.append(_parse_klines(r))
+                    d += dt.timedelta(days=1)
+                continue
         if raw is None:
             continue
         frames.append(_parse_klines(raw))
@@ -317,7 +328,10 @@ def latest_available(kind="klines", back=8):
     for i in range(back):
         d = today - dt.timedelta(days=i)
         if kind == "klines":
+            # 现货和永续的 daily 发布时间不同步; 取两者都已发布的日期, 否则末日截面只剩现货币
             u = f"{SBASE}/daily/klines/BTCUSDT/1m/BTCUSDT-1m-{d:%Y-%m-%d}.zip"
+            if not _exists(f"{FBASE}/daily/klines/BTCUSDT/1m/BTCUSDT-1m-{d:%Y-%m-%d}.zip"):
+                continue
         elif kind == "metrics":
             u = f"{FBASE}/daily/metrics/BTCUSDT/BTCUSDT-metrics-{d:%Y-%m-%d}.zip"
         else:

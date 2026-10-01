@@ -3,10 +3,11 @@
 把"开源证券·市场微观结构系列"的因子搬到数字货币市场，验证**数据墙消失**这一结论：
 A 股复现里卡死的分钟/逐笔/订单簿数据，在 crypto 交易所 API 上**免费**就能拿到。
 
-> ⚠ **本文数据止于 2026-05-31。已两轮续期: 2026-07-28 见 [`UPDATE_2026-07.md`](UPDATE_2026-07.md);
-> 2026-08-15 见 [`UPDATE_2026-08.md`](UPDATE_2026-08.md) (YTD / 七月初 / 近15天)。
+> ⚠ **本文数据止于 2026-05-31。已三轮续期: 2026-07-28 见 [`UPDATE_2026-07.md`](UPDATE_2026-07.md);
+> 2026-08-15 见 [`UPDATE_2026-08.md`](UPDATE_2026-08.md) (YTD / 七月初 / 近15天);
+> 2026-09-29 见 [`UPDATE_2026-09.md`](UPDATE_2026-09.md) (发布后逐月; 产品 B 对冲 6–8 月 +4.6% / −6.9% / −4.0%)。
 > 下面的具体数字是更早的快照。**
-> 增量更新: `python update_data.py all`; 三窗口复核: `python report_windows.py`。
+> 增量更新: `python update_data.py all`; 发布后复核: `python report_postpub.py`。
 
 > 📄 **执行摘要版研究报告见 [`REPORT.md`](REPORT.md)** · 🔬 **实时检测看板**: `python live_monitor.py`
 > 然后浏览器开 `http://127.0.0.1:8765` (预览 `dashboard_preview.png`)。

@@ -9,7 +9,7 @@ project_type: empirical-research
 status: public-research-snapshot
 authors:
   - Repository owner and maintainer
-sample_period: 2024-06 through 2026-05 (730 days) for the report; updates extend price and open-interest data to 2026-08-15 and funding to 2026-07-31.
+sample_period: 2024-06 through 2026-05 (730 days) for the report; updates extend price and open-interest data to 2026-09-29 and funding to 2026-08-31.
 data_sources:
   - Binance public data dumps (data.binance.vision)
   - OKX market data via ccxt
