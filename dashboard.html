@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>crypto_micro · 实时因子检测</title>
+<style>
+  :root{
+    --bg:#0d1117; --card:#161b22; --line:#21262d; --txt:#e6edf3; --mut:#8b949e;
+    --grn:#2ea043; --red:#da3633; --warm:#d29922; --blue:#388bfd;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font-family:"Microsoft YaHei",-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px}
+  header{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;
+         align-items:baseline;gap:14px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:700}
+  header .sub{color:var(--mut);font-size:12px}
+  header .upd{margin-left:auto;color:var(--mut);font-size:12px}
+  .wrap{padding:18px 22px;max-width:1180px;margin:0 auto}
+  .grid{display:grid;gap:14px;margin-bottom:16px}
+  .g2{grid-template-columns:1.5fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .wlist .wrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+  .wlist .wrow:last-child{border-bottom:none}
+  .wrow .c{font-weight:700;width:64px}
+  .wrow .px{color:var(--mut);font-size:11px;width:84px;text-align:right;font-variant-numeric:tabular-nums}
+  .wrow .v{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .card h3{margin:0 0 10px;font-size:12px;color:var(--mut);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+  .big{font-size:30px;font-weight:800;line-height:1.1}
+  .regime{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+  .hot{background:rgba(218,54,51,.18);color:#ff7b72;border:1px solid #5a1e1e}
+  .warm{background:rgba(210,153,34,.16);color:#e3b341;border:1px solid #5a4a1e}
+  .neutral{background:rgba(139,148,158,.16);color:#c9d1d9;border:1px solid #30363d}
+  .cold{background:rgba(46,160,67,.16);color:#56d364;border:1px solid #1e5a2e}
+  .basket{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .chip{padding:4px 9px;border-radius:6px;font-weight:700;font-size:13px}
+  .chip.l{background:rgba(46,160,67,.16);color:#56d364;border:1px solid #1e5a2e}
+  .chip.s{background:rgba(218,54,51,.16);color:#ff7b72;border:1px solid #5a1e1e}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{color:var(--mut);font-size:11px;font-weight:600;text-transform:uppercase;cursor:default}
+  td.coin,th.coin{text-align:left;font-weight:700}
+  tr:hover td{background:rgba(56,139,253,.06)}
+  .pos{color:#56d364}.neg{color:#ff7b72}
+  .tag{font-size:11px;font-weight:800;padding:2px 7px;border-radius:5px}
+  .tag.L{background:rgba(46,160,67,.18);color:#56d364}
+  .tag.S{background:rgba(218,54,51,.18);color:#ff7b72}
+  .bar{height:6px;border-radius:3px;background:#30363d;position:relative;min-width:46px;display:inline-block;vertical-align:middle}
+  .bar>i{position:absolute;top:0;bottom:0;border-radius:3px}
+  details{margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+  details summary{cursor:pointer;color:var(--mut);font-size:13px;font-weight:600}
+  details p,details li{color:var(--mut);font-size:12.5px;line-height:1.7}
+  .err{background:rgba(218,54,51,.15);border:1px solid #5a1e1e;color:#ff7b72;padding:10px 14px;border-radius:8px;margin-bottom:14px;display:none}
+  svg{display:block}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔬 crypto_micro · 实时因子检测</h1>
+  <span class="sub">OKX live · 王牌信号=资金费率 + 振幅 (已过样本外/跨所验证)</span>
+  <span class="upd" id="upd">连接中…</span>
+</header>
+
+<div class="wrap">
+  <div class="err" id="err"></div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>组合净值 · 市场中性 (现货多头 + perp 指数空头)</h3>
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+        <div class="big" id="nv">—</div>
+        <div class="sub" id="nvsub"></div>
+      </div>
+      <svg id="eq" width="100%" height="118"></svg>
+      <div class="sub" id="eqnote" style="font-size:11px;margin-top:2px"></div>
+    </div>
+    <div class="card">
+      <h3>全市场拥挤度 · 平均资金费率 (年化)</h3>
+      <div class="big" id="agg">—</div>
+      <span class="regime neutral" id="regime">—</span>
+      <div style="margin-top:10px"><svg id="spark" width="100%" height="46"></svg></div>
+      <div class="sub" style="font-size:11px;margin-top:2px">高=杠杆多头拥挤(偏空) · 负=出清(偏多)</div>
+    </div>
+  </div>
+
+  <div class="grid g3">
+    <div class="card">
+      <h3>🟢 LONG · 现货等权买入</h3>
+      <div id="longw" class="wlist"></div>
+    </div>
+    <div class="card">
+      <h3>🛡 对冲腿 · perp 指数空头</h3>
+      <div id="hedge" class="wlist"></div>
+      <div class="sub" style="font-size:11px;margin-top:8px">中和 beta → 留纯 alpha。简化可 short BTC/ETH perp; 精确做法是各 −1/N 等权空全池指数。</div>
+    </div>
+    <div class="card">
+      <h3>🔴 SHORT · perp (横截面替代腿)</h3>
+      <div id="shortw" class="wlist"></div>
+      <div class="sub" style="font-size:11px;margin-top:8px">若改纯横截面多空(不做指数对冲): 做空这些, 做空高 funding 还能<b>收</b>资金费。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>全池实时因子明细 (按复合分排序)</h3>
+    <table id="tbl">
+      <thead><tr>
+        <th class="coin">币种</th><th>价格</th>
+        <th>资金费率(年化)</th><th>funding z</th>
+        <th>24h振幅</th><th>振幅 z</th><th>24h涨跌</th>
+        <th>复合分</th><th>信号</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <details>
+    <summary>📋 方法与验证 (点击展开报告摘要)</summary>
+    <p><b>信号来源</b>: 把"开源证券·微观结构系列"因子迁到 crypto。经 730 天回测 + 样本外检验, 真正稳健的是
+    <b>资金费率 funding</b> 与 <b>振幅</b>:</p>
+    <ul>
+      <li><b>资金费率 (王牌)</b>: A 股没有的永续维度。回测夏普 Binance +1.42 / 跨所 OKX +5.16(同号强复现);
+          120 日滚动 91% 窗口为正; 收益 83% 是真·价格反转(空拥挤多头), 17% 是 carry。</li>
+      <li><b>振幅(低价位)</b>: 参数最稳的价格因子, 宽池夏普 +1.63; 偏熊市防御。</li>
+      <li>方向: 做多<b>低</b>费率+<b>低</b>振幅(不拥挤、平静), 做空<b>高</b>费率+<b>高</b>振幅(拥挤、躁动)。</li>
+      <li>落地形态: 现货多头篮子 + perp 空指数对冲 beta → 纯 alpha 夏普 1.18 / 回撤 −11% / 周换手 5%,
+          对 5–30bps 成本不敏感。裸多头会被 crypto 的 beta 吃掉。</li>
+    </ul>
+    <p style="color:#8b949e">⚠️ 研究/教育用途, 非投资建议。本环境仅 OKX 可直连; funding 每 8h 结算, 看板每 60s 刷新。</p>
+  </details>
+</div>
+
+<script>
+const fmtPct = (x,d=1)=> (x>=0?"+":"")+(x*100).toFixed(d)+"%";
+const fmtAnn = (x,d=0)=> (x>=0?"+":"")+x.toFixed(d)+"%";
+const cls = x=> x>=0?"pos":"neg";
+
+function zbar(z){
+  const w = Math.min(Math.abs(z),3)/3*100;
+  const col = z>=0 ? "var(--grn)":"var(--red)";
+  const side = z>=0 ? "left:50%":"right:50%";
+  return `<span class="bar" style="width:92px"><i style="${side};width:${w/2}%;background:${col}"></i>`+
+         `<i style="left:50%;width:1px;background:#56607a"></i></span>`;
+}
+
+function drawEq(pts){
+  const svg=document.getElementById("eq"); const w=svg.clientWidth||520,h=118,pad=6;
+  if(!pts||pts.length<2){svg.innerHTML="";return;}
+  const vs=pts.map(p=>p[1]); let mn=Math.min(...vs,1),mx=Math.max(...vs,1);
+  if(mx-mn<0.02){mx+=0.02;mn-=0.02;}
+  const X=i=>pad+i*(w-2*pad)/(pts.length-1);
+  const Y=v=>h-pad-(v-mn)/(mx-mn)*(h-2*pad);
+  let d="";pts.forEach((p,i)=>d+=(i?"L":"M")+X(i).toFixed(1)+","+Y(p[1]).toFixed(1)+" ");
+  const last=vs[vs.length-1], col=last>=1?"#56d364":"#ff7b72";
+  const area=d+`L${X(pts.length-1).toFixed(1)},${(h-pad).toFixed(1)} L${X(0).toFixed(1)},${(h-pad).toFixed(1)} Z`;
+  svg.innerHTML=
+    `<line x1="0" y1="${Y(1).toFixed(1)}" x2="${w}" y2="${Y(1).toFixed(1)}" stroke="#30363d" stroke-dasharray="3 3"/>`+
+    `<path d="${area}" fill="${col}" fill-opacity="0.08"/>`+
+    `<path d="${d}" fill="none" stroke="${col}" stroke-width="2"/>`+
+    `<circle cx="${X(pts.length-1).toFixed(1)}" cy="${Y(last).toFixed(1)}" r="3.5" fill="${col}"/>`;
+}
+
+function wrows(arr){
+  return arr.map(x=>{
+    const v=(x.w*100); const col=v>=0?"#56d364":"#ff7b72";
+    const px=x.px>=1?x.px.toLocaleString(undefined,{maximumFractionDigits:2}):x.px.toPrecision(4);
+    return `<div class="wrow"><span class="c">${x.coin}</span>`+
+           `<span class="px">$${px}</span>`+
+           `<span class="v" style="color:${col}">${v>=0?'+':''}${v.toFixed(1)}%</span></div>`;
+  }).join("");
+}
+
+function spark(hist){
+  const svg=document.getElementById("spark");
+  const w=svg.clientWidth||300,h=46,pad=3;
+  if(!hist||hist.length<2){svg.innerHTML="";return;}
+  const ys=hist.map(p=>p[1]); let mn=Math.min(...ys,0),mx=Math.max(...ys,0);
+  if(mx-mn<1){mx+=1;mn-=1;}
+  const X=i=>pad+i*(w-2*pad)/(hist.length-1);
+  const Y=v=>h-pad-(v-mn)/(mx-mn)*(h-2*pad);
+  let d="";hist.forEach((p,i)=>d+=(i?"L":"M")+X(i).toFixed(1)+","+Y(p[1]).toFixed(1)+" ");
+  const zeroY=Y(0).toFixed(1);
+  const last=ys[ys.length-1];
+  svg.innerHTML=`<line x1="0" y1="${zeroY}" x2="${w}" y2="${zeroY}" stroke="#30363d" stroke-dasharray="3 3"/>`+
+    `<path d="${d}" fill="none" stroke="${last>=0?'#e3b341':'#56d364'}" stroke-width="2"/>`;
+}
+
+async function tick(){
+  try{
+    const r=await fetch("/api/signals",{cache:"no-store"});
+    const d=await r.json();
+    if(d.error){throw new Error(d.error);}
+    document.getElementById("err").style.display="none";
+
+    const agg=document.getElementById("agg");
+    agg.textContent=fmtAnn(d.agg_funding_ann,1);
+    agg.className="big "+(d.agg_funding_ann>=0?"":"pos");
+    const rg=document.getElementById("regime");
+    rg.textContent=d.regime; rg.className="regime "+d.regime_color;
+    spark(d.hist);
+
+    // 组合净值
+    const nv=document.getElementById("nv");
+    nv.textContent=d.net_value.toFixed(3);
+    nv.className="big "+(d.net_value>=1?"pos":"neg");
+    const s=d.strat||{};
+    document.getElementById("nvsub").innerHTML=
+      `今日实时 <b class="${d.live_pnl>=0?'pos':'neg'}">${d.live_pnl>=0?'+':''}${d.live_pnl}%</b>`+
+      (s.sharpe!==undefined?` · 近${s.ndays}日(OKX) 夏普 ${s.sharpe} · 年化 ${s.ann}% · 回撤 ${s.mdd}%`:"");
+    drawEq(d.equity);
+    document.getElementById("eqnote").textContent=
+      "市场中性策略(对冲beta纯alpha), OKX日线近窗实证; 末点为实时mark。全样本(Binance 510天)验证夏普 1.18。";
+
+    // 下单清单
+    document.getElementById("longw").innerHTML=wrows(d.long_w);
+    document.getElementById("shortw").innerHTML=wrows(d.short_w);
+    document.getElementById("hedge").innerHTML=
+      `<div class="wrow"><span class="c">指数</span>`+
+      `<span class="px" style="width:auto;flex:1;text-align:left">${d.hedge.name}</span>`+
+      `<span class="v" style="color:#ff7b72">${(d.hedge.w*100).toFixed(0)}%</span></div>`;
+
+    document.getElementById("tbody").innerHTML=d.rows.map(x=>{
+      const sig=x.signal?`<span class="tag ${x.signal[0]}">${x.signal}</span>`:"";
+      return `<tr>
+        <td class="coin">${x.coin}</td>
+        <td>${x.price>=1?x.price.toLocaleString(undefined,{maximumFractionDigits:2}):x.price.toPrecision(4)}</td>
+        <td class="${cls(x.fund_ann)}">${fmtAnn(x.fund_ann*100,1)}</td>
+        <td>${zbar(x.fund_z)}</td>
+        <td>${(x.amp*100).toFixed(1)}%</td>
+        <td>${zbar(x.amp_z)}</td>
+        <td class="${cls(x.ret)}">${fmtPct(x.ret)}</td>
+        <td style="font-weight:700;color:${x.score>=0?'#56d364':'#ff7b72'}">${x.score.toFixed(2)}</td>
+        <td>${sig}</td></tr>`;
+    }).join("");
+
+    const t=new Date(d.ts);
+    document.getElementById("upd").textContent=
+      `更新 ${t.toLocaleTimeString()} · ${d.pool} 币 · 60s 刷新`;
+  }catch(e){
+    const el=document.getElementById("err");
+    el.style.display="block"; el.textContent="拉取失败: "+e.message+" (将自动重试)";
+  }
+}
+tick(); setInterval(tick,60000);
+</script>
+</body>
+</html>

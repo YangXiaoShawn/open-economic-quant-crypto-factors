@@ -1,0 +1,21 @@
+title: "Equity Microstructure Factors in Crypto: Funding Rates and Positioning"
+slug: crypto-factors
+summary: Transfer test of a sell-side A-share market-microstructure factor series to 105 crypto assets on Binance spot and perpetual data, with an OKX cross-exchange check and post-publication out-of-sample updates.
+research_question: Which A-share microstructure factors survive in crypto, where minute bars, taker flow and perpetual-futures data are freely available?
+research_fields:
+  - Asset pricing
+  - Market microstructure
+project_type: empirical-research
+status: public-research-snapshot
+authors:
+  - Repository owner and maintainer
+sample_period: 2024-06 through 2026-05 (730 days) for the report; updates extend price and open-interest data to 2026-08-15 and funding to 2026-07-31.
+data_sources:
+  - Binance public data dumps (data.binance.vision)
+  - OKX market data via ccxt
+data_license: Exchange data are not redistributed; scripts download them from the public sources above.
+code_license: No repository license declared; copyright remains with the repository owner.
+evidence_grade: backtest and post-publication out-of-sample backtest (association)
+github_url: https://github.com/YangXiaoShawn/open-economic-quant-crypto-factors
+last_updated: 2026-09-30
+limitations: Next-close fills without impact costs; about five names per leg; bear-market sample; short OKX funding history; funding factor requires perpetual shorts.
