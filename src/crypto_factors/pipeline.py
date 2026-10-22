@@ -42,6 +42,7 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
     fixture_path = root / "data" / "fixtures" / "sample_perp_panel.csv"
     transfer_path = root / "reports" / "factor_transfer_summary.csv"
     postpub_path = root / "reports" / "postpub_composite_summary.csv"
+    regime_path = root / "reports" / "regime_conditioned_composite_summary.csv"
 
     with fixture_path.open("r", encoding="utf-8") as fh:
         sample_rows = list(csv.DictReader(fh))
@@ -49,6 +50,8 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
         factors = list(csv.DictReader(fh))
     with postpub_path.open("r", encoding="utf-8") as fh:
         windows = list(csv.DictReader(fh))
+    with regime_path.open("r", encoding="utf-8") as fh:
+        regime_rows = list(csv.DictReader(fh))
 
     by_date: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in sample_rows:
@@ -57,6 +60,7 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
     dates_sorted = sorted(by_date.keys())
     ic_series: dict[str, list[float]] = defaultdict(list)
     static_comp_returns: list[float] = []
+    regime_comp_returns: list[float] = []
 
     for dt in dates_sorted:
         cross = by_date[dt]
@@ -88,6 +92,16 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
         )
         static_comp_returns.append(net_comp)
 
+        mean_fund = sum(sig_funding) / len(sig_funding)
+        fund_disp = math.sqrt(sum((x - mean_fund) ** 2 for x in sig_funding) / len(sig_funding))
+        mean_mom = sum(sig_mom) / len(sig_mom)
+        w_fund = 0.20 if (fund_disp > 0.00025 and mean_mom > 0.0) else (1.0 / 3.0)
+        w_other = (1.0 - w_fund) / 2.0
+        gross_regime = w_fund * s_fund + w_other * s_ret + w_other * s_amp
+        regime_comp_returns.append(
+            turnover_penalized_net_return(gross_regime, turnover=0.35, cost_bps=2.0 * DEFAULT_COST_BPS_PER_SIDE)
+        )
+
     factor_names = list(ic_series.keys())
     t_stats = [newey_west_tstat(ic_series[k], max_lag=2) for k in factor_names]
     p_vals = [_normal_two_sided_pvalue(t) for t in t_stats]
@@ -115,7 +129,7 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
     manifest = build_run_manifest(
         project_slug="crypto-factors",
         root=root,
-        files=[fixture_path, transfer_path, postpub_path],
+        files=[fixture_path, transfer_path, postpub_path, regime_path],
         evidence_grade=boundary.grade.value,
     )
     checksum_errors = verify_manifest_checksums(root, manifest)
@@ -131,6 +145,8 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
         for i, name in enumerate(factor_names)
     }
 
+    regime_vol_targeted = [r * w for r, w in zip(regime_comp_returns, vol_weights)]
+
     return {
         "project": "crypto-factors",
         "evidence_grade": "backtest and post-publication out-of-sample backtest (association)",
@@ -139,9 +155,12 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
         "robust_factors": [r["factor"] for r in factors if "strongest" in r["verdict"] or "robust" in r["verdict"]],
         "postpub_92d_return_pct": float(windows[-1]["market_neutral_return_pct"]),
         "postpub_92d_max_drawdown_pct": float(windows[-1]["max_drawdown_pct"]),
+        "regime_variants_evaluated": len(regime_rows),
+        "regime_conditioned_postpub_92d_pct": float(regime_rows[-1]["postpub_92d_return_pct"]),
         "sample_fixture_dates": len(dates_sorted),
         "sample_factor_fdr": sample_fdr_table,
         "sample_static_composite_mean_net": round(sum(static_comp_returns) / max(1, len(static_comp_returns)), 5),
         "sample_vol_targeted_mean_net": round(sum(vol_targeted_returns) / max(1, len(vol_targeted_returns)), 5),
+        "sample_regime_conditioned_mean_net": round(sum(regime_vol_targeted) / max(1, len(regime_vol_targeted)), 5),
         "verified_files": manifest["file_count"],
     }

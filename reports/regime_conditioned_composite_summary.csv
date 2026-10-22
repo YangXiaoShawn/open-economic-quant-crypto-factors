@@ -1,0 +1,4 @@
+composite_variant,weighting_rule,prepub_515d_return_pct,prepub_515d_sharpe,prepub_max_dd_pct,postpub_92d_return_pct,postpub_aug2026_squeeze_pct,postpub_max_dd_pct
+static_equal_weight,Equal weight (1/3 Funding + 1/3 Retail L/S + 1/3 Low-Price Range),35.00,1.18,-11.50,-6.55,-3.97,-11.90
+volatility_targeted_15pct,15% annualized realized vol target (20d lookback),38.40,1.34,-8.60,-4.12,-2.45,-7.80
+funding_crowding_regime_conditioned,Halve contrarian funding short leg when dispersion > P80 in altcoin rally + 15% vol target,41.20,1.49,-7.40,-1.48,-0.62,-5.20
