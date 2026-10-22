@@ -48,6 +48,22 @@ class TestCryptoPublishedResults(unittest.TestCase):
         self.assertGreater(result["sample_static_composite_mean_net"], 0.0)
         self.assertGreater(result["sample_vol_targeted_mean_net"], 0.0)
         self.assertGreater(result["sample_regime_conditioned_mean_net"], 0.0)
+        self.assertEqual(result["real_perp_days"], 785)
+        self.assertAlmostEqual(result["real_785d_static_sharpe"], 1.87, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_gated_sharpe"], 2.19, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_vt_sharpe"], 2.12, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_vt_max_dd_pct"], -8.55, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_vt_calmar"], 4.33, places=2)
+
+    def test_real_785d_perp_validation_table(self) -> None:
+        path = ROOT / "reports" / "real_785d_perp_validation.csv"
+        with path.open("r", encoding="utf-8") as fh:
+            rows = {r["strategy"]: r for r in csv.DictReader(fh)}
+        self.assertEqual(len(rows), 4)
+        self.assertAlmostEqual(float(rows["static_equal_weight"]["full_785d_sharpe"]), 1.87, places=2)
+        self.assertAlmostEqual(float(rows["inv_vol_funding_squeeze_gated"]["full_785d_sharpe"]), 2.19, places=2)
+        self.assertAlmostEqual(float(rows["inv_vol_funding_gated_voltarget_15pct"]["full_785d_max_dd_pct"]), -8.55, places=2)
+        self.assertAlmostEqual(float(rows["inv_vol_funding_gated_voltarget_15pct"]["full_785d_calmar"]), 4.33, places=2)
 
     def test_cli_summary_runs(self) -> None:
         self.assertEqual(main(["reproduce-sample"]), 0)

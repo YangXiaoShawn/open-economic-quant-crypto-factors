@@ -93,6 +93,17 @@ coins. Major-coin closes match OKX within 0.04%.
 One to four months of data say little about Sharpe ratios; the updates report cumulative
 returns and day counts instead.
 
+### v2.0 Real 785-Day Perpetual Futures Validation (`data/results/equity_perp.csv`)
+
+Evaluated directly on the 785 daily net return observations (`2024-06-03` to `2026-07-27`) of the three surviving Binance perpetual futures factors (`低价位振幅`, `资金费率`, `散户多空比`, `reports/real_785d_perp_validation.csv`):
+
+| Strategy | 785d Cum Return (%) | 785d Sharpe | 785d Max DD (%) | Calmar | NW $t$-stat | Pre-Pub 728d Sharpe |
+|---|---:|---:|---:|---:|---:|---:|
+| `static_equal_weight` | +150.75 | 1.87 | -16.26 | 3.28 | 2.95 | 1.89 |
+| `volatility_targeted_15pct` | +91.00 | 1.85 | -12.54 | 2.80 | 2.79 | 1.91 |
+| **`inv_vol_funding_squeeze_gated`** | **+163.88** | **2.19** | -14.88 | 3.83 | **3.23** | **2.23** |
+| **`inv_vol_funding_gated_voltarget_15pct`** | +96.95 | **2.12** | **-8.55** | **4.33** | **3.13** | **2.18** |
+
 ## Limitations
 
 - Fills at the next close, no market impact, equal weights within quintiles, about five

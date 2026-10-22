@@ -1,0 +1,5 @@
+strategy,weighting_rule,full_785d_cum_ret_pct,full_785d_ann_ret_pct,full_785d_ann_vol_pct,full_785d_sharpe,full_785d_max_dd_pct,full_785d_calmar,full_785d_nw_t,prepub_728d_cum_ret_pct,prepub_728d_sharpe,postpub_57d_cum_ret_pct,postpub_57d_sharpe,postpub_57d_max_dd_pct
+static_equal_weight,1/3 Low-Price Amp + 1/3 Funding + 1/3 Retail L/S,150.75,53.33,24.41,1.87,-16.26,3.28,2.95,140.11,1.89,4.43,1.65,-5.04
+volatility_targeted_15pct,Static EW + 20d causal 15% annualized vol target,91.00,35.11,17.02,1.85,-12.54,2.80,2.79,87.59,1.91,1.82,0.93,-3.60
+inv_vol_funding_squeeze_gated,20d inverse-volatility weights + 0.25x funding gate when 5d funding leg < -1.5%,163.88,57.01,21.69,2.19,-14.88,3.83,3.23,152.45,2.23,4.53,1.63,-5.58
+inv_vol_funding_gated_voltarget_15pct,20d inverse-volatility weights + funding squeeze gate + 15% annualized vol target,96.95,37.05,15.40,2.12,-8.55,4.33,3.13,92.65,2.18,2.23,1.27,-3.59
