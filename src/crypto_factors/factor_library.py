@@ -16,7 +16,7 @@ import os, glob
 import numpy as np
 import pandas as pd
 
-DATADIR  = os.path.join(os.path.dirname(__file__), "data")
+DATADIR  = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 SMART_FRAC = 0.20      # 聪明钱量占比
 TOP_FRAC   = 0.30      # 理想反转 高/低成交时段占比
 SMOOTH_N   = 5         # 因子平滑/累计天数

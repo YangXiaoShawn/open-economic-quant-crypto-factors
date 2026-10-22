@@ -9,7 +9,7 @@ import datetime as dt
 import pandas as pd
 import ccxt
 
-OUTDIR = os.path.join(os.path.dirname(__file__), "data")
+OUTDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
 os.makedirs(OUTDIR, exist_ok=True)
 
 # 流动性较好的 USDT 现货对 (跨市值/板块，便于做横截面)

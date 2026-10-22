@@ -71,11 +71,11 @@ The factors are cross-sectional ranks with no fitted parameters, so every day af
 
 | Update | Window | Market-neutral composite | What changed |
 |---|---|---|---|
-| [`UPDATE_2026-07.md`](UPDATE_2026-07.md) | June 2026 (30 days) | **+4.6%**, max drawdown −2.0% | Funding reversed in the June sell-off (new-window Sharpe −1.76; its short leg failed); retail ratio and range strengthened |
-| [`UPDATE_2026-08.md`](UPDATE_2026-08.md) | July 2026 (31 days) | **−6.9%**, max drawdown −5.6% | Range and retail ratio turned negative; open-interest change became the strongest factor year to date |
-| [`UPDATE_2026-09.md`](UPDATE_2026-09.md) | August 2026 (31 days); single factors through 2026-09-28 | **−4.0%** | Altcoins rallied (+21% in August, +35% in September); funding's short leg failed again (−10.1% in August); range lost in both months |
+| [`reports/UPDATE_2026-07.md`](reports/UPDATE_2026-07.md) | June 2026 (30 days) | **+4.6%**, max drawdown −2.0% | Funding reversed in the June sell-off (new-window Sharpe −1.76; its short leg failed); retail ratio and range strengthened |
+| [`reports/UPDATE_2026-08.md`](reports/UPDATE_2026-08.md) | July 2026 (31 days) | **−6.9%**, max drawdown −5.6% | Range and retail ratio turned negative; open-interest change became the strongest factor year to date |
+| [`reports/UPDATE_2026-09.md`](reports/UPDATE_2026-09.md) | August 2026 (31 days); single factors through 2026-09-28 | **−4.0%** | Altcoins rallied (+21% in August, +35% in September); funding's short leg failed again (−10.1% in August); range lost in both months |
 
-![Post-publication returns](equity_postpub.png)
+![Post-publication returns](reports/figures/equity_postpub.png)
 
 Over June–August (92 days) the composite returned **−6.5%** with a maximum drawdown of
 −11.9%, slightly deeper than the −11.5% of its whole pre-publication backtest (515 days).
@@ -125,9 +125,8 @@ python make_charts_postpub.py                           # equity_postpub.png
 ## Files
 
 The research write-ups are in Chinese: [`README_zh.md`](README_zh.md) (full detail),
-[`REPORT.md`](REPORT.md), [`UPDATE_2026-07.md`](UPDATE_2026-07.md),
-[`UPDATE_2026-08.md`](UPDATE_2026-08.md) and [`UPDATE_2026-09.md`](UPDATE_2026-09.md). Result tables are in the CSV files at the top
-level; figures are the PNG files.
+[`REPORT.md`](REPORT.md), [`reports/UPDATE_2026-07.md`](reports/UPDATE_2026-07.md),
+[`reports/UPDATE_2026-08.md`](reports/UPDATE_2026-08.md) and [`reports/UPDATE_2026-09.md`](reports/UPDATE_2026-09.md). Result tables are in `data/results/` and `reports/`; figures are in `reports/figures/`.
 
 Research period: June–September 2026. Source series: Kaiyuan Securities (开源证券)
 financial-engineering *Market Microstructure Research* series; the reports themselves

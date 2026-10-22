@@ -1,0 +1,8 @@
+factor,category,sharpe_730d,rolling_pos_share,both_halves_positive,okx_confirmed,verdict
+Low-price range,Price,1.63,,true,true,robust (bear-market defensive)
+Funding rate,Perpetual,1.42,0.91,true,true,strongest
+Retail long/short ratio,Perpetual,1.39,,true,false,robust
+Large taker buys,Order flow,0.73,,true,false,low confidence (parameter-fragile)
+Ideal reversal,Price,0.25,,true,false,low confidence (parameter-fragile)
+Cross-sectional momentum,Price,-0.38,,false,false,does not transfer
+Top-trader long/short ratio,Perpetual,-1.36,,false,false,contrarian (fade top traders)
