@@ -10,8 +10,8 @@ import os, time
 import numpy as np
 import pandas as pd
 import ccxt
-import backtest
-from backtest import backtest_factor, metrics
+from crypto_factors import backtest
+from crypto_factors.backtest import backtest_factor, metrics
 
 ROOT = os.path.dirname(__file__)
 OKXDIR = os.path.join(ROOT, "data_okx")

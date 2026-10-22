@@ -14,8 +14,8 @@ B. 时序择时: 全市场平均 funding 作 risk-on/off 开关。
 import os
 import numpy as np
 import pandas as pd
-from backtest import metrics, QUANTILE, COST_BPS
-from backtest_perp import build_panel, BIG_POOL
+from crypto_factors.backtest import metrics, QUANTILE, COST_BPS
+from crypto_factors.backtest_perp import build_panel, BIG_POOL
 
 ANN = 365
 

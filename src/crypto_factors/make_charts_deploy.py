@@ -6,9 +6,9 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from backtest import metrics
-from backtest_perp import build_panel, BIG_POOL
-from deploy_spot import zc, backtest_basket, bench
+from crypto_factors.backtest import metrics
+from crypto_factors.backtest_perp import build_panel, BIG_POOL
+from crypto_factors.deploy_spot import zc, backtest_basket, bench
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
 plt.rcParams["axes.unicode_minus"] = False

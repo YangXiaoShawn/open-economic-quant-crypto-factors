@@ -1,5 +1,5 @@
 PY ?= python3
-export PYTHONPATH := src:src/crypto_factors
+export PYTHONPATH := src:../packages/oeq-core/src
 
 .PHONY: setup test reproduce-sample report dashboard check
 

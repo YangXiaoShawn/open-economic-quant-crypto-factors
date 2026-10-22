@@ -16,10 +16,10 @@ import os, sys
 import numpy as np
 import pandas as pd
 
-from backtest import backtest_factor, metrics, QUANTILE, COST_BPS
-from backtest_perp import build_panel, BIG_POOL, FACTORS, pool_panel
-from backtest_real import backtest_real
-from deploy_spot import zc, backtest_basket, bench
+from crypto_factors.backtest import backtest_factor, metrics, QUANTILE, COST_BPS
+from crypto_factors.backtest_perp import build_panel, BIG_POOL, FACTORS, pool_panel
+from crypto_factors.backtest_real import backtest_real
+from crypto_factors.deploy_spot import zc, backtest_basket, bench
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SPLIT = pd.Timestamp(sys.argv[1] if len(sys.argv) > 1 else "2026-06-01", tz="UTC")

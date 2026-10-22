@@ -8,8 +8,8 @@
 import os
 import numpy as np
 import pandas as pd
-from backtest import backtest_factor, metrics
-from backtest_all32 import build_panel
+from crypto_factors.backtest import backtest_factor, metrics
+from crypto_factors.backtest_all32 import build_panel
 
 # 候选: 反转 / 大单资金流 / 主动买入 / 振幅切割 / 截面动量
 CANDS = [

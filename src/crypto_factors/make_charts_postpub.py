@@ -12,8 +12,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from backtest_perp import build_panel
-from report_postpub import all_series, MONTHS
+from crypto_factors.backtest_perp import build_panel
+from crypto_factors.report_postpub import all_series, MONTHS
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 START = pd.Timestamp("2026-06-01", tz="UTC")

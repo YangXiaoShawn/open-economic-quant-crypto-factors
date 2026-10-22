@@ -12,8 +12,8 @@
 import os
 import numpy as np
 import pandas as pd
-from backtest import metrics
-from backtest_perp import build_panel, BIG_POOL
+from crypto_factors.backtest import metrics
+from crypto_factors.backtest_perp import build_panel, BIG_POOL
 
 ROOT = os.path.dirname(__file__)
 

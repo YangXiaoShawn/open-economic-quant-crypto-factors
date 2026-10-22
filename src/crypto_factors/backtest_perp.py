@@ -14,8 +14,8 @@ funding/OI 是 A 股没有的衍生品资金流维度 (perp 独有):
 import os, glob
 import numpy as np
 import pandas as pd
-from backtest import backtest_factor, metrics
-import portfolio_opt as po
+from crypto_factors.backtest import backtest_factor, metrics
+import crypto_factors.portfolio_opt as po
 
 ROOT = os.path.dirname(__file__)
 KDIR = os.path.join(ROOT, "data_binance")
@@ -92,7 +92,7 @@ def pool_panel(panel, pool):
 def pool_sweep(panel):
     """同一因子在 大币(24)/中池(60)/宽池(105) 上的夏普 —— 论证'每个因子有各自最优广度'。"""
     try:
-        from binance_pipeline import UNIVERSE as SPOT60
+        from crypto_factors.binance_pipeline import UNIVERSE as SPOT60
     except Exception:
         SPOT60 = None
     pools = {"大币池24": BIG_POOL}

@@ -17,8 +17,8 @@ funding 计提口径: last_funding_rate>0 => 多头付、空头收。持有期(t
 import os
 import numpy as np
 import pandas as pd
-from backtest import metrics, QUANTILE, COST_BPS
-from backtest_perp import build_panel, BIG_POOL, FACTORS, pool_panel
+from crypto_factors.backtest import metrics, QUANTILE, COST_BPS
+from crypto_factors.backtest_perp import build_panel, BIG_POOL, FACTORS, pool_panel
 
 
 def backtest_real(panel, col, direction, pool):

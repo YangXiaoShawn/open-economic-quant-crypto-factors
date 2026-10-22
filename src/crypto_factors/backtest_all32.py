@@ -11,7 +11,7 @@
 import os, glob
 import numpy as np
 import pandas as pd
-from backtest import backtest_factor, metrics
+from crypto_factors.backtest import backtest_factor, metrics
 
 DATADIR = os.path.join(os.path.dirname(__file__), "data_binance")
 N = 5

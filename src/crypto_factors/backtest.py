@@ -12,7 +12,7 @@
 import os, warnings
 import numpy as np
 import pandas as pd
-from factor_library import build_panel
+from crypto_factors.factor_library import build_panel
 warnings.filterwarnings("ignore", message="Mean of empty slice")
 
 QUANTILE = 5          # 分位数

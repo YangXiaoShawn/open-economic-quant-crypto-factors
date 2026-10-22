@@ -12,10 +12,10 @@ import os
 import numpy as np
 import pandas as pd
 
-from backtest import backtest_factor, metrics
-from backtest_perp import build_panel, BIG_POOL, FACTORS, pool_panel
-from backtest_real import backtest_real
-from deploy_spot import zc, backtest_basket, bench
+from crypto_factors.backtest import backtest_factor, metrics
+from crypto_factors.backtest_perp import build_panel, BIG_POOL, FACTORS, pool_panel
+from crypto_factors.backtest_real import backtest_real
+from crypto_factors.deploy_spot import zc, backtest_basket, bench
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 YTD = pd.Timestamp("2026-01-01", tz="UTC")

@@ -7,9 +7,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from backtest import backtest_factor, metrics
-from backtest_perp import build_panel, pool_panel, ls_series, BIG_POOL, FACTORS
-from deploy_spot import zc, backtest_basket, bench
+from crypto_factors.backtest import backtest_factor, metrics
+from crypto_factors.backtest_perp import build_panel, pool_panel, ls_series, BIG_POOL, FACTORS
+from crypto_factors.deploy_spot import zc, backtest_basket, bench
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
 plt.rcParams["axes.unicode_minus"] = False

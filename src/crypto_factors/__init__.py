@@ -1,4 +1,6 @@
-"""Cross-market microstructure and perpetual-futures factor research in crypto."""
+"""CryptoFactors — Cross-Market Factor Transfer and Post-Publication Out-of-Sample Research."""
 
-__all__ = ["__version__"]
-__version__ = "0.1.0"
+from crypto_factors.pipeline import run_sample_pipeline
+
+__all__ = ["run_sample_pipeline"]
+__version__ = "0.2.0"

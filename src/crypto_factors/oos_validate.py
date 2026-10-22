@@ -9,9 +9,9 @@
 import os
 import numpy as np
 import pandas as pd
-import backtest
-from backtest import backtest_factor, metrics
-from backtest_perp import build_panel, BIG_POOL, pool_panel
+from crypto_factors import backtest
+from crypto_factors.backtest import backtest_factor, metrics
+from crypto_factors.backtest_perp import build_panel, BIG_POOL, pool_panel
 
 # (因子列, 名称, 方向, 池, 原始列, 平滑方式)  原始列=None 则不做变N
 FACS = [

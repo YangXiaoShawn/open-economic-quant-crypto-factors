@@ -29,7 +29,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
 import pandas as pd
 
-from binance_pipeline import day_features, months, COLS, UNIVERSE as SPOT_UNIVERSE
+from crypto_factors.binance_pipeline import day_features, months, COLS, UNIVERSE as SPOT_UNIVERSE
 
 FBASE = "https://data.binance.vision/data/futures/um"
 ROOT = os.path.dirname(__file__)

@@ -39,8 +39,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
 import pandas as pd
 
-from binance_pipeline import day_features, COLS, UNIVERSE as SPOT_UNIVERSE
-from perp_pipeline import BIG_POOL
+from crypto_factors.binance_pipeline import day_features, COLS, UNIVERSE as SPOT_UNIVERSE
+from crypto_factors.perp_pipeline import BIG_POOL
 
 SBASE = "https://data.binance.vision/data/spot"
 FBASE = "https://data.binance.vision/data/futures/um"

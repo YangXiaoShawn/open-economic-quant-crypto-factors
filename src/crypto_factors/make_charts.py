@@ -9,8 +9,8 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from backtest import backtest_factor, metrics
-from backtest_all32 import build_panel
+from crypto_factors.backtest import backtest_factor, metrics
+from crypto_factors.backtest_all32 import build_panel
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei"]
 plt.rcParams["axes.unicode_minus"] = False
