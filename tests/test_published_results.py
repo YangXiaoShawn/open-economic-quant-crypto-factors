@@ -80,6 +80,22 @@ class TestCryptoPublishedResults(unittest.TestCase):
         self.assertAlmostEqual(float(rows[("② 单因子多空 (理想口径, 单边5bps)", "资金费率(大)")]["九月.cum"]), 0.05098, places=4)
         self.assertAlmostEqual(float(rows[("④ 可交付产品 (周调仓·15bps)", "产品B·大币top8·对冲beta")]["九月.cum"]), 0.01474, places=4)
 
+        stress_path = ROOT / "reports" / "live_readiness_2026_10" / "cost_and_delay_stress.csv"
+        with stress_path.open("r", encoding="utf-8") as fh:
+            stress = {(r["factor_or_strategy"], r["delay_mode"], float(r["cost_bps"])): r for r in csv.DictReader(fh)}
+        self.assertAlmostEqual(float(stress[("散户多空比(大)", "1m_delay_00:01_24h", 5.0)]["full_sharpe"]), 1.43, places=2)
+        self.assertGreater(float(stress[("散户多空比(大)", "0m_ideal_close", 5.0)]["breakeven_bps_full"]), 95.0)
+        self.assertLess(float(stress[("持仓量变化(大)", "0m_ideal_close", 5.0)]["breakeven_bps_full"]), 10.0)
+
+        hedge_path = ROOT / "reports" / "live_readiness_2026_10" / "product_b_realistic_hedges.csv"
+        with hedge_path.open("r", encoding="utf-8") as fh:
+            hedges = {(r["hedge_specification"], r["execution_timing"]): r for r in csv.DictReader(fh)}
+        self.assertAlmostEqual(
+            float(hedges[("real_ew24_perp_with_funding", "1m_00:01_delay")]["full_537d_sharpe"]),
+            0.81,
+            places=2,
+        )
+
     def test_cli_summary_runs(self) -> None:
         self.assertEqual(main(["reproduce-sample"]), 0)
 

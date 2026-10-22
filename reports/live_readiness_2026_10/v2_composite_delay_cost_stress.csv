@@ -1,0 +1,15 @@
+strategy,delay_mode,cost_bps,full_835d_cum_pct,full_835d_sharpe,full_835d_mdd_pct,postpub_142d_cum_pct,sep_oct_50d_cum_pct,since_sep28_22d_cum_pct
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),0m_ideal_close,5.0,72.34,1.48,-14.32,2.3,0.72,3.15
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),0m_ideal_close,15.0,53.06,1.18,-15.25,-0.37,-0.36,2.44
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),0m_ideal_close,30.0,28.9,0.73,-18.42,-3.72,-1.91,1.85
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),0m_ideal_close,50.0,0.87,0.1,-24.78,-8.17,-3.24,1.09
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),1m_delay_00:01_intraday,15.0,43.17,1.0,-16.41,-1.48,-0.53,2.48
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),1m_delay_00:01_24h,5.0,70.76,1.46,-15.13,1.66,0.67,3.13
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),1m_delay_00:01_24h,15.0,53.14,1.18,-15.83,-0.97,-0.57,2.26
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),1m_delay_00:01_24h,30.0,28.26,0.72,-18.39,-4.31,-2.1,1.69
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),1m_delay_00:01_24h,50.0,1.14,0.11,-24.83,-8.91,-3.66,0.96
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),12h_delay_12:00_24h,15.0,43.62,1.03,-17.68,1.0,0.25,0.8
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),24h_delay_next_day,5.0,76.28,1.57,-14.0,3.28,2.8,1.3
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),24h_delay_next_day,15.0,54.92,1.23,-14.79,1.75,2.43,1.41
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),24h_delay_next_day,30.0,28.37,0.74,-15.86,-1.88,0.88,0.79
+inv_vol_funding_gated_voltarget_15pct (3-Factor Live),24h_delay_next_day,50.0,-1.38,0.04,-19.43,-7.77,-1.73,-0.92

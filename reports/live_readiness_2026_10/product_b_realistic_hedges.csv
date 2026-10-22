@@ -1,0 +1,9 @@
+hedge_specification,execution_timing,full_537d_cum_pct,full_537d_sharpe,full_537d_mdd_pct,postpub_142d_cum_pct,postpub_142d_mdd_pct,sep_oct_50d_cum_pct,oct_20d_cum_pct
+ideal_ew24_no_funding,0m_close,30.56,0.86,-12.45,-2.61,-12.45,4.21,2.7
+ideal_ew24_no_funding,1m_00:01_delay,30.51,0.86,-12.6,-3.05,-12.6,3.91,2.37
+real_ew24_perp_with_funding,0m_close,28.47,0.82,-13.35,-2.8,-12.29,4.35,2.71
+real_ew24_perp_with_funding,1m_00:01_delay,28.41,0.81,-13.25,-3.24,-12.43,4.03,2.37
+real_btc_eth_50_50_perp,0m_close,-9.64,-0.06,-40.86,1.96,-27.05,29.48,3.67
+real_btc_eth_50_50_perp,1m_00:01_delay,-8.52,-0.03,-40.44,2.28,-27.13,29.97,3.97
+real_btc_eth_beta_adjusted_perp,0m_close,8.69,0.3,-31.14,2.96,-24.56,28.91,2.83
+real_btc_eth_beta_adjusted_perp,1m_00:01_delay,11.22,0.35,-30.35,3.57,-24.61,29.71,3.46
