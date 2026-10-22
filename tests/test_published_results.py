@@ -65,6 +65,21 @@ class TestCryptoPublishedResults(unittest.TestCase):
         self.assertAlmostEqual(float(rows["inv_vol_funding_gated_voltarget_15pct"]["full_785d_max_dd_pct"]), -8.55, places=2)
         self.assertAlmostEqual(float(rows["inv_vol_funding_gated_voltarget_15pct"]["full_785d_calmar"]), 4.33, places=2)
 
+    def test_latest_2026_10_backtest_update(self) -> None:
+        comp_path = ROOT / "reports" / "latest_oos_2026_10_composite.csv"
+        with comp_path.open("r", encoding="utf-8") as fh:
+            comp = {r["strategy"]: r for r in csv.DictReader(fh)}
+        self.assertAlmostEqual(float(comp["inv_vol_funding_gated_voltarget_15pct"]["full_835d_sharpe"]), 1.69, places=2)
+        self.assertAlmostEqual(float(comp["inv_vol_funding_gated_voltarget_15pct"]["since_sep28_22d_pct"]), 1.59, places=2)
+        self.assertAlmostEqual(float(comp["static_equal_weight"]["since_sep28_22d_pct"]), 0.51, places=2)
+
+        postpub_path = ROOT / "data" / "results" / "report_postpub_2026-10.csv"
+        with postpub_path.open("r", encoding="utf-8") as fh:
+            rows = {(r["group"], r["strategy"]): r for r in csv.DictReader(fh)}
+        self.assertAlmostEqual(float(rows[("② 单因子多空 (理想口径, 单边5bps)", "散户多空比(大)")]["上次9月复核后(9/29起).cum"]), 0.06662, places=4)
+        self.assertAlmostEqual(float(rows[("② 单因子多空 (理想口径, 单边5bps)", "资金费率(大)")]["九月.cum"]), 0.05098, places=4)
+        self.assertAlmostEqual(float(rows[("④ 可交付产品 (周调仓·15bps)", "产品B·大币top8·对冲beta")]["九月.cum"]), 0.01474, places=4)
+
     def test_cli_summary_runs(self) -> None:
         self.assertEqual(main(["reproduce-sample"]), 0)
 

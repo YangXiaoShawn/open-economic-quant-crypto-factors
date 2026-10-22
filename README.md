@@ -22,7 +22,7 @@ live trading or investment advice.
 | Spot and USDT-margined perpetual 1-minute klines, including taker-buy volume | Binance public dumps, `data.binance.vision` |
 | Funding rates (monthly files), open interest and long/short ratios (daily) | `data.binance.vision` |
 | Cross-exchange check: daily OHLCV and funding | OKX via `ccxt` |
-| Panel | 105 coins × 730 days, 2024-06 to 2026-05 (extended to 851 days, through 2026-09-29, in the updates) |
+| Panel | 105 coins × 730 days, 2024-06 to 2026-05 (extended to 873 days, through 2026-10-21, in the updates) |
 
 Raw data are not in this repository; `binance_pipeline.py`, `perp_pipeline.py`,
 `fetch_okx.py` and `update_data.py` download them.
@@ -74,6 +74,7 @@ The factors are cross-sectional ranks with no fitted parameters, so every day af
 | [`reports/UPDATE_2026-07.md`](reports/UPDATE_2026-07.md) | June 2026 (30 days) | **+4.6%**, max drawdown −2.0% | Funding reversed in the June sell-off (new-window Sharpe −1.76; its short leg failed); retail ratio and range strengthened |
 | [`reports/UPDATE_2026-08.md`](reports/UPDATE_2026-08.md) | July 2026 (31 days) | **−6.9%**, max drawdown −5.6% | Range and retail ratio turned negative; open-interest change became the strongest factor year to date |
 | [`reports/UPDATE_2026-09.md`](reports/UPDATE_2026-09.md) | August 2026 (31 days); single factors through 2026-09-28 | **−4.0%** | Altcoins rallied (+21% in August, +35% in September); funding's short leg failed again (−10.1% in August); range lost in both months |
+| [`reports/UPDATE_2026-10.md`](reports/UPDATE_2026-10.md) | September 2026 (30 days) + October MTD through 2026-10-21 (`fwd_ret` through 10-20) | **+1.47%** (Sep) / **+2.70%** (Oct MTD), **+4.21%** over 50d since 08-31 | Funding (+5.10% in Sep, +3.38% Oct MTD, +12.05% pure long-only excess over 50d) and retail ratio (+2.82% Sep, +8.73% Oct MTD, +6.66% over 09-29..10-20) recovered strongly; v2.0 `inv_vol_funding_gated_voltarget_15pct` gained +1.59% (MaxDD -1.31%) over 09-29..10-20 |
 
 ![Post-publication returns](reports/figures/equity_postpub.png)
 
@@ -137,7 +138,7 @@ python make_charts_postpub.py                           # equity_postpub.png
 
 The research write-ups are in Chinese: [`README_zh.md`](README_zh.md) (full detail),
 [`REPORT.md`](REPORT.md), [`reports/UPDATE_2026-07.md`](reports/UPDATE_2026-07.md),
-[`reports/UPDATE_2026-08.md`](reports/UPDATE_2026-08.md) and [`reports/UPDATE_2026-09.md`](reports/UPDATE_2026-09.md). Result tables are in `data/results/` and `reports/`; figures are in `reports/figures/`.
+[`reports/UPDATE_2026-08.md`](reports/UPDATE_2026-08.md), [`reports/UPDATE_2026-09.md`](reports/UPDATE_2026-09.md) and [`reports/UPDATE_2026-10.md`](reports/UPDATE_2026-10.md). Result tables are in `data/results/` and `reports/`; figures are in `reports/figures/`.
 
 Research period: June–September 2026. Source series: Kaiyuan Securities (开源证券)
 financial-engineering *Market Microstructure Research* series; the reports themselves

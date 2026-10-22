@@ -1,0 +1,5 @@
+strategy,full_835d_cum_pct,full_835d_sharpe,full_835d_mdd_pct,full_835d_calmar,postpub_142d_cum_pct,postpub_142d_mdd_pct,sep_2026_30d_pct,oct_2026_20d_pct,since_aug31_50d_pct,since_aug31_50d_mdd_pct,since_sep28_22d_pct,since_sep28_22d_mdd_pct
+static_equal_weight,105.32,1.55,-12.65,2.78,3.24,-7.52,-1.45,0.12,-1.33,-6.64,0.51,-2.79
+vol_targeted_15pct,86.2,1.58,-12.65,2.35,2.62,-7.01,-1.18,0.13,-1.05,-4.52,0.44,-2.14
+inv_vol_funding_squeeze_gated,104.57,1.69,-11.68,3.0,2.46,-7.73,-3.53,2.36,-1.25,-6.97,2.12,-1.62
+inv_vol_funding_gated_voltarget_15pct,83.61,1.69,-10.02,2.89,2.31,-7.09,-2.77,1.77,-1.05,-5.08,1.59,-1.31
