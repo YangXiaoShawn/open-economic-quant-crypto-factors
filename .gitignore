@@ -1,4 +1,10 @@
-data/
+data/*
+# Small fixtures and published result tables read by the tests.
+!data/fixtures/
+!data/results/
+data/results/*
+!data/results/equity_perp.csv
+!data/results/report_postpub_2026-10.csv
 data_*/
 __pycache__/
 *.pyc
