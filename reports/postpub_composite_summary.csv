@@ -1,5 +1,5 @@
 window,days,start_date,end_date,market_neutral_return_pct,spot_long_only_return_pct,max_drawdown_pct,regime_note
-"Pre-publication (730d sample, 515d live panel)",515,2025-01-01,2026-05-31,35.0,-41.0,-11.5,In-sample / pre-publication reference (Sharpe 1.18)
+"Pre-publication (730d sample, 515d backtest panel)",515,2025-01-01,2026-05-31,35.0,-41.0,-11.5,In-sample / pre-publication reference (Sharpe 1.18)
 June 2026 (OOS Month 1),30,2026-06-01,2026-06-30,4.57,-16.88,-2.0,Funding reversed in sell-off; retail ratio and range gained
 July 2026 (OOS Month 2),31,2026-07-01,2026-07-31,-6.93,-6.11,-5.6,Range and retail ratio turned negative
 August 2026 (OOS Month 3),31,2026-08-01,2026-08-31,-3.97,15.00,-5.4,Altcoin rally (+21%); funding short leg lost -10.1%
