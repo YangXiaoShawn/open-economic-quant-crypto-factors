@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from crypto_factors import config, run_sample_pipeline
+from crypto_factors.pipeline import evaluate_real_785d_perp_nav
 from crypto_factors.cli import main
 
 
@@ -49,11 +50,26 @@ class TestCryptoPublishedResults(unittest.TestCase):
         self.assertGreater(result["sample_vol_targeted_mean_net"], 0.0)
         self.assertGreater(result["sample_regime_conditioned_mean_net"], 0.0)
         self.assertEqual(result["real_perp_days"], 785)
+        # Overlays now pay 5 bp per side on the notional they trade (published sleeve NAVs unchanged).
+        self.assertEqual(result["real_785d_overlay_cost_bps_per_side"], config.DEFAULT_COST_BPS_PER_SIDE)
         self.assertAlmostEqual(result["real_785d_static_sharpe"], 1.87, places=2)
-        self.assertAlmostEqual(result["real_785d_inv_vol_gated_sharpe"], 2.19, places=2)
-        self.assertAlmostEqual(result["real_785d_inv_vol_vt_sharpe"], 2.12, places=2)
-        self.assertAlmostEqual(result["real_785d_inv_vol_vt_max_dd_pct"], -8.55, places=2)
-        self.assertAlmostEqual(result["real_785d_inv_vol_vt_calmar"], 4.33, places=2)
+        self.assertAlmostEqual(result["real_785d_voltarget_sharpe"], 1.79, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_gated_sharpe"], 2.05, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_vt_sharpe"], 1.96, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_vt_max_dd_pct"], -9.25, places=2)
+        self.assertAlmostEqual(result["real_785d_inv_vol_vt_calmar"], 3.64, places=2)
+
+    def test_real_785d_overlays_without_rebalancing_cost_reproduce_published_table(self) -> None:
+        published = evaluate_real_785d_perp_nav(root=ROOT, rebalance_cost_bps_per_side=0.0)
+        self.assertAlmostEqual(published["real_785d_static_sharpe"], 1.87, places=2)
+        self.assertAlmostEqual(published["real_785d_voltarget_sharpe"], 1.85, places=2)
+        self.assertAlmostEqual(published["real_785d_inv_vol_gated_sharpe"], 2.19, places=2)
+        self.assertAlmostEqual(published["real_785d_inv_vol_vt_sharpe"], 2.12, places=2)
+        self.assertAlmostEqual(published["real_785d_inv_vol_vt_max_dd_pct"], -8.55, places=2)
+        self.assertAlmostEqual(published["real_785d_inv_vol_vt_calmar"], 4.33, places=2)
+        charged = evaluate_real_785d_perp_nav(root=ROOT)
+        for key in ("real_785d_voltarget_sharpe", "real_785d_inv_vol_gated_sharpe", "real_785d_inv_vol_vt_sharpe"):
+            self.assertLess(charged[key], published[key], msg=key)
 
     def test_real_785d_perp_validation_table(self) -> None:
         path = ROOT / "reports" / "real_785d_perp_validation.csv"

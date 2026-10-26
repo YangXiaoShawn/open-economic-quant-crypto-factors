@@ -18,6 +18,7 @@ import os
 import numpy as np
 import pandas as pd
 from crypto_factors.backtest import metrics, QUANTILE, COST_BPS
+from crypto_factors.costs import cost_from_traded, leg_traded_notional
 from crypto_factors.backtest_perp import build_panel, BIG_POOL, FACTORS, pool_panel
 
 
@@ -36,9 +37,9 @@ def backtest_real(panel, col, direction, pool):
         lr, sr = longs["fwd_ret"].mean(), shorts["fwd_ret"].mean()
         mkt = g["fwd_ret"].mean()
         cl, cs = set(longs["sym"]), set(shorts["sym"])
-        to = (len(cl ^ prev_l) + len(cs ^ prev_s)) / max(len(cl) + len(cs), 1)
-        to_l = len(cl ^ prev_l) / max(len(cl), 1)
-        cost = to * COST_BPS / 1e4
+        # 成本按两腿实际成交名义 sum|Δw| 计提 (单边 COST_BPS); 2026-10-26 前少计一半
+        to_l = leg_traded_notional(prev_l, cl)
+        cost = cost_from_traded(to_l + leg_traded_notional(prev_s, cs), COST_BPS)
         # funding 计提
         lf = longs["fwd_fund"].mean() if has_fund else 0.0
         sf = shorts["fwd_fund"].mean() if has_fund else 0.0
@@ -47,7 +48,7 @@ def backtest_real(panel, col, direction, pool):
         fund_pnl = sf - lf                     # 空腿收 + 多腿付
         ls_price = (lr - sr) - cost
         ls_real = ls_price + fund_pnl
-        long_only = (lr - mkt) - to_l * COST_BPS / 1e4   # 纯多头超额(不做空)
+        long_only = (lr - mkt) - cost_from_traded(to_l, COST_BPS)   # 纯多头超额(不做空)
         rows.append(dict(day=day, ls_price=ls_price, ls_real=ls_real,
                          long_only=long_only, fund_pnl=fund_pnl, price=lr - sr))
         prev_l, prev_s = cl, cs
