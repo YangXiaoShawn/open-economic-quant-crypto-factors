@@ -1,0 +1,6 @@
+portfolio,last_settled_fwd_day,since_oct20_new_days_pct,oct_mtd_pct,since_sep28_pct,since_aug31_pct,postpub_since_jun01_pct
+Benchmark_Big24_EW,2026-10-23,-7.17,-11.36,-11.75,19.77,14.75
+ProductB_Top8_LongOnly,2026-10-23,-6.33,-7.98,-7.68,26.56,13.58
+ProductB_Top8_MarketNeutral,2026-10-23,0.85,3.57,4.36,5.1,-1.78
+v2_InvVol_FundingGated_Comp,2026-10-23,-1.07,1.59,1.34,-2.0,1.68
+v2_InvVol_FundingGated_VolTarget15,2026-10-23,-1.24,0.85,0.68,-1.94,1.39

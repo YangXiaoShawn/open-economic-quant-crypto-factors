@@ -1,0 +1,292 @@
+{
+  "理想反转": {
+    "long_leg": [
+      "1000SHIBUSDT",
+      "ADAUSDT",
+      "ALGOUSDT",
+      "APEUSDT",
+      "BLURUSDT",
+      "CHZUSDT",
+      "DOGEUSDT",
+      "DYDXUSDT",
+      "FILUSDT",
+      "GALAUSDT",
+      "GMXUSDT",
+      "ICPUSDT",
+      "ZKUSDT"
+    ],
+    "short_leg": [
+      "1000PEPEUSDT",
+      "AEVOUSDT",
+      "ARBUSDT",
+      "ARUSDT",
+      "BOMEUSDT",
+      "CFXUSDT",
+      "COMPUSDT",
+      "CRVUSDT",
+      "ENAUSDT",
+      "ETHFIUSDT",
+      "GMTUSDT",
+      "WUSDT",
+      "ZROUSDT"
+    ]
+  },
+  "截面动量": {
+    "long_leg": [
+      "1000PEPEUSDT",
+      "ARBUSDT",
+      "ARKMUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "COMPUSDT",
+      "CRVUSDT",
+      "INJUSDT",
+      "TRXUSDT",
+      "UNIUSDT",
+      "WLDUSDT",
+      "XTZUSDT"
+    ],
+    "short_leg": [
+      "ACEUSDT",
+      "AXSUSDT",
+      "BLURUSDT",
+      "BOMEUSDT",
+      "DYDXUSDT",
+      "FETUSDT",
+      "FLOWUSDT",
+      "GALAUSDT",
+      "GMTUSDT",
+      "ICPUSDT",
+      "IMXUSDT",
+      "WUSDT",
+      "ZROUSDT"
+    ]
+  },
+  "低价位振幅": {
+    "long_leg": [
+      "1000SHIBUSDT",
+      "ATOMUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "DOTUSDT",
+      "ETHUSDT",
+      "GASUSDT",
+      "TRXUSDT",
+      "XLMUSDT",
+      "XRPUSDT",
+      "XTZUSDT"
+    ],
+    "short_leg": [
+      "ACEUSDT",
+      "APTUSDT",
+      "ARKMUSDT",
+      "CRVUSDT",
+      "ENAUSDT",
+      "ETHFIUSDT",
+      "FILUSDT",
+      "GMXUSDT",
+      "INJUSDT",
+      "WLDUSDT",
+      "WUSDT",
+      "ZKUSDT",
+      "ZROUSDT"
+    ]
+  },
+  "主动买入率": {
+    "long_leg": [
+      "AAVEUSDT",
+      "AVAXUSDT",
+      "BTCUSDT",
+      "XLMUSDT"
+    ],
+    "short_leg": [
+      "BNBUSDT",
+      "FILUSDT",
+      "TRXUSDT",
+      "XRPUSDT"
+    ]
+  },
+  "大额主动买": {
+    "long_leg": [
+      "AAVEUSDT",
+      "APTUSDT",
+      "AVAXUSDT",
+      "BCHUSDT"
+    ],
+    "short_leg": [
+      "BNBUSDT",
+      "FILUSDT",
+      "INJUSDT",
+      "TRXUSDT"
+    ]
+  },
+  "资金费率": {
+    "long_leg": [
+      "ARBUSDT",
+      "ATOMUSDT",
+      "FILUSDT",
+      "TRXUSDT"
+    ],
+    "short_leg": [
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "ETHUSDT"
+    ]
+  },
+  "持仓量变化": {
+    "long_leg": [
+      "APTUSDT",
+      "ARBUSDT",
+      "FILUSDT",
+      "XLMUSDT"
+    ],
+    "short_leg": [
+      "AAVEUSDT",
+      "BCHUSDT",
+      "DOTUSDT",
+      "INJUSDT"
+    ]
+  },
+  "散户多空比": {
+    "long_leg": [
+      "AAVEUSDT",
+      "ATOMUSDT",
+      "ETCUSDT",
+      "XLMUSDT"
+    ],
+    "short_leg": [
+      "BNBUSDT",
+      "DOGEUSDT",
+      "ETHUSDT",
+      "XRPUSDT"
+    ]
+  },
+  "大户多空比": {
+    "long_leg": [
+      "AVAXUSDT",
+      "DOGEUSDT",
+      "ETCUSDT",
+      "UNIUSDT"
+    ],
+    "short_leg": [
+      "ARBUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "TRXUSDT"
+    ]
+  },
+  "Product_B_Top8": {
+    "long_top8": [
+      {
+        "sym": "ATOMUSDT",
+        "SCORE": 4.804460502763923,
+        "FUND_f": -0.00029177564036671997,
+        "GLS_f": 1.1309538187777777,
+        "AMP_lo_f": 0.007712838661296746,
+        "live_ret_10_23": 0.052508751458576475
+      },
+      {
+        "sym": "TRXUSDT",
+        "SCORE": 3.276238026355042,
+        "FUND_f": -4.013477021939982e-05,
+        "GLS_f": 1.3751239625486114,
+        "AMP_lo_f": 0.002288825609080508,
+        "live_ret_10_23": 0.0023745015068952213
+      },
+      {
+        "sym": "XLMUSDT",
+        "SCORE": 1.999686194719249,
+        "FUND_f": 6.732895017219999e-06,
+        "GLS_f": 0.9907342383472223,
+        "AMP_lo_f": 0.010601399387179921,
+        "live_ret_10_23": 0.01077782846715336
+      },
+      {
+        "sym": "AAVEUSDT",
+        "SCORE": 1.1483377653611524,
+        "FUND_f": -3.954895139534007e-05,
+        "GLS_f": 1.2382602811111112,
+        "AMP_lo_f": 0.014698437608801004,
+        "live_ret_10_23": 0.013500613664257477
+      },
+      {
+        "sym": "ARBUSDT",
+        "SCORE": 0.5019674622620987,
+        "FUND_f": -7.680393583813994e-05,
+        "GLS_f": 1.5795401968819445,
+        "AMP_lo_f": 0.016424918282781576,
+        "live_ret_10_23": 0.01597854628750217
+      },
+      {
+        "sym": "DOTUSDT",
+        "SCORE": 0.39206432803253666,
+        "FUND_f": -2.8745582863400067e-06,
+        "GLS_f": 1.979046026513889,
+        "AMP_lo_f": 0.009902782425044663,
+        "live_ret_10_23": 0.04226998830830109
+      },
+      {
+        "sym": "BTCUSDT",
+        "SCORE": 0.2164558592537238,
+        "FUND_f": 0.00015917257286584004,
+        "GLS_f": 1.5860767119861112,
+        "AMP_lo_f": 0.007485631782156124,
+        "live_ret_10_23": 0.005506206001653968
+      },
+      {
+        "sym": "ETCUSDT",
+        "SCORE": 0.21344357000496006,
+        "FUND_f": 0.00014064059602860005,
+        "GLS_f": 1.2596403319375,
+        "AMP_lo_f": 0.011459902550123748,
+        "live_ret_10_23": 0.014650589913133505
+      }
+    ],
+    "short_bottom5": [
+      {
+        "sym": "ETHUSDT",
+        "SCORE": -2.6380767420801883,
+        "FUND_f": 0.00017564091335149995,
+        "GLS_f": 2.8609648426249996,
+        "AMP_lo_f": 0.009395362574137044,
+        "live_ret_10_23": 0.009655565139473854
+      },
+      {
+        "sym": "DOGEUSDT",
+        "SCORE": -2.30308634949563,
+        "FUND_f": 0.00019020688561588,
+        "GLS_f": 2.539762241243056,
+        "AMP_lo_f": 0.010099146770764789,
+        "live_ret_10_23": 0.00990099009900991
+      },
+      {
+        "sym": "XRPUSDT",
+        "SCORE": -2.205139856332761,
+        "FUND_f": 0.00013398456213618002,
+        "GLS_f": 2.712064187125,
+        "AMP_lo_f": 0.010397990345393857,
+        "live_ret_10_23": 0.008099640864980495
+      },
+      {
+        "sym": "UNIUSDT",
+        "SCORE": -1.2874225904103873,
+        "FUND_f": 8.003974532943997e-05,
+        "GLS_f": 1.6233828671597224,
+        "AMP_lo_f": 0.018459999448928906,
+        "live_ret_10_23": 0.01855817273376159
+      },
+      {
+        "sym": "APTUSDT",
+        "SCORE": -1.238893754936576,
+        "FUND_f": 9.108130181000278e-07,
+        "GLS_f": 1.626918181527778,
+        "AMP_lo_f": 0.021649051960065648,
+        "live_ret_10_23": 0.02352784793300544
+      }
+    ]
+  }
+}
