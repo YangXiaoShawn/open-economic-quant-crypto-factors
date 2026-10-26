@@ -6,12 +6,13 @@
   - 每个 UTC 日: 按因子排序，做 分位组合 (默认五分位)。
   - 方向按"研报预期"定向(反转类 long低 short高)，故展示的是"按原文方向交易"的结果。
   - 多空 = 多组等权 − 空组等权; 多头 = 仅多组(贴近实盘只做多)。
-  - 成本: 单边 COST_BPS, 按当日换手计提。
+  - 成本: 单边 COST_BPS, 按当日实际成交名义 sum|Δw| 计提 (多空两腿合计, 见 costs.py)。
   - 7×24, 每日调仓; 年化按 365 天。
 """
 import os, warnings
 import numpy as np
 import pandas as pd
+from crypto_factors.costs import cost_from_traded, leg_traded_notional
 from crypto_factors.factor_library import build_panel
 warnings.filterwarnings("ignore", message="Mean of empty slice")
 
@@ -34,10 +35,15 @@ FACTORS = [
 
 
 def backtest_factor(panel, col, direction):
-    """返回每日 多空/多头 收益序列 + 换手。"""
+    """返回每日 多空/多头 收益序列 + 换手。
+
+    traded   = 多空两腿实际成交名义 sum|Δw| (每腿毛敞口 1), 成本 = traded × COST_BPS (单边);
+    turnover = traded / 2 (两腿平均, 与 2026-10-26 前的换手口径一致)。
+    2026-10-26 前成本按 turnover 而非 traded 计提, 多空成本少计一半 (实际约单边 2.5bps)。
+    """
     df = panel.dropna(subset=[col, "fwd_ret"]).copy()
     df["sig"] = df[col] * direction          # 按方向转成"越大越看多"
-    ls_ret, long_ret, days, turns = [], [], [], []
+    ls_ret, long_ret, days, turns, traded_list = [], [], [], [], []
     prev_long, prev_short = set(), set()
     for day, g in df.groupby("day"):
         if g["sym"].nunique() < QUANTILE * 2:
@@ -47,16 +53,16 @@ def backtest_factor(panel, col, direction):
         longs = g[g["q"] == QUANTILE - 1]      # 信号最高(看多)
         shorts = g[g["q"] == 0]                # 信号最低(看空)
         lr, sr = longs["fwd_ret"].mean(), shorts["fwd_ret"].mean()
-        # 换手(多头腿)
+        # 实际成交名义: 多头腿 + 空头腿 (各自 sum|Δw|)
         cur_long = set(longs["sym"]); cur_short = set(shorts["sym"])
-        to = (len(cur_long ^ prev_long) + len(cur_short ^ prev_short)) / \
-             max(len(cur_long) + len(cur_short), 1)
-        cost = to * COST_BPS / 1e4
-        ls_ret.append((lr - sr) - cost)
-        long_ret.append(lr - (len(cur_long ^ prev_long) / max(len(cur_long),1)) * COST_BPS/1e4)
-        days.append(day); turns.append(to)
+        traded_l = leg_traded_notional(prev_long, cur_long)
+        traded = traded_l + leg_traded_notional(prev_short, cur_short)
+        ls_ret.append((lr - sr) - cost_from_traded(traded, COST_BPS))
+        long_ret.append(lr - cost_from_traded(traded_l, COST_BPS))
+        days.append(day); turns.append(traded / 2.0); traded_list.append(traded)
         prev_long, prev_short = cur_long, cur_short
-    return pd.DataFrame({"day": days, "ls": ls_ret, "long": long_ret, "turnover": turns})
+    return pd.DataFrame({"day": days, "ls": ls_ret, "long": long_ret, "turnover": turns,
+                         "traded": traded_list})
 
 
 def metrics(r):
