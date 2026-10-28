@@ -27,12 +27,25 @@ live trading or investment advice.
 Raw data are not in this repository; `binance_pipeline.py`, `perp_pipeline.py`,
 `fetch_okx.py` and `update_data.py` download them.
 
-**Backtest conventions.** Daily cross-sectional quintile long–short, 5 bp per side; about
-five names per leg in the large-coin pool; 365-day annualization. Robustness checks:
-two-halves split, parameter sensitivity, rolling windows and the OKX cross-exchange
-replication.
+**Backtest conventions.** Daily cross-sectional quintile long–short, stated cost 5 bp per
+side; about five names per leg in the large-coin pool; 365-day annualization. Positions
+are filled at the same daily close (00:00 UTC) that completes the signal, with no
+execution lag. Robustness checks: two-halves split, parameter sensitivity, rolling
+windows and the OKX cross-exchange replication.
 
-## Results (report of 2026-06-19, data through 2026-05-31)
+> **Cost erratum (2026-10-26).** Every long–short figure in this README, `README_zh.md`
+> and the dated reports was computed with a formula that charged the *average* of the
+> two legs' turnover instead of their sum, i.e. about **2.5 bp per side, not the stated
+> 5 bp**. The composite overlays in the v2.0 section were also charged nothing for
+> re-weighting. The code now charges 5 bp per side on the traded notional of both legs
+> and of the overlays (`src/crypto_factors/costs.py`, `tests/test_cost_accounting.py`).
+> The factor tables have **not** been regenerated: that needs the raw Binance panels,
+> which are not in this repository or in the public Hugging Face dataset (it holds only
+> the aggregated `data/results/` tables). Until then, read the long–short Sharpe ratios
+> below as upper bounds. Long-only lines and the weekly spot basket of the deliverable
+> composite were charged correctly.
+
+## Results (report of 2026-06-19, data through 2026-05-31; long–short costs under-charged, see erratum)
 
 | Factor | Type | 730-day Sharpe | Out-of-sample checks | Verdict |
 |---|---|---|---|---|
@@ -43,7 +56,7 @@ replication.
 | "Ideal" reversal | price | +0.25 | both halves positive, parameter-fragile | low confidence |
 | Cross-sectional momentum | price | −0.38 | both halves negative | does not transfer |
 
-Other findings recorded in [`REPORT.md`](REPORT.md):
+Other findings recorded in [`reports/REPORT.md`](reports/REPORT.md):
 
 - **Short samples manufacture factors.** The best factors on a 120-day window
   (Sharpe +3.50 and +1.93) turned negative on 730 days.
@@ -63,6 +76,13 @@ top 8 large coins, equal weight, weekly rebalance.
 |---|---|---|---|---|
 | Spot long only | 0.59 | −0.54 | −56% | 5% |
 | Spot long + perpetual index short (market-neutral) | 1.35 | +1.18 | −11% | 5% |
+
+The hedged row subtracts an equal-weight index and charges nothing on the short side.
+The 2026-10 audit ([`reports/LIVE_READINESS_AUDIT_2026-10.md`](reports/LIVE_READINESS_AUDIT_2026-10.md)
+§3, 537 days through 2026-10-20, 1-minute entry delay) rebuilt it with tradable hedges:
+Sharpe **0.81** with a 24-perpetual equal-weight short (funding accrual and rebalance fees
+included) and **−0.03** with a BTC/ETH 50/50 perpetual short, against 0.86 for the ideal
+index over the same window. This is a research result, not a trading recommendation.
 
 ## After publication
 
@@ -94,21 +114,72 @@ coins. Major-coin closes match OKX within 0.04%.
 One to four months of data say little about Sharpe ratios; the updates report cumulative
 returns and day counts instead.
 
-### v2.0 Real 785-Day Perpetual Futures Validation (`data/results/equity_perp.csv`)
+### v2.0 785-day composite overlays (`data/results/equity_perp.csv`): superseded headline
 
-Evaluated directly on the 785 daily net return observations (`2024-06-03` to `2026-07-27`) of the three surviving Binance perpetual futures factors (`低价位振幅`, `资金费率`, `散户多空比`, `reports/real_785d_perp_validation.csv`):
+These rows combine the daily net returns (2024-06-03 to 2026-07-27) of the three surviving
+perpetual-futures factors (`低价位振幅`, `资金费率`, `散户多空比`). **They overstate
+performance and are kept only as the published record**:
+
+- The three factor NAVs carry the under-charged long–short cost (about 2.5 bp per side).
+- The published overlay rows charged nothing when the inverse-vol weights, the funding
+  gate or the vol-target leverage (up to 1.5×) changed the allocation.
+- Selection is in-sample. The core factors, their universes and the gate constants
+  (20-day inverse-vol window, 5-day funding trigger at −1.5%, 0.25× scale) were chosen
+  on a window that overlaps 728 of the 785 days, and the funding-squeeze gate was added
+  on 2026-10-22, after the June–August 2026 squeeze it dampens had been observed and
+  published. Only the last 57 days postdate the 2026-05-31 cutoff, and they are not
+  independent of the gate's design.
+- The Benjamini–Hochberg FDR step in `pipeline.py` runs only on the 10-date sample fixture
+  (`data/fixtures/sample_perp_panel.csv`); no multiple-testing adjustment covers these
+  strategies.
+
+As published (`reports/real_785d_perp_validation.csv`, no overlay cost):
 
 | Strategy | 785d Cum Return (%) | 785d Sharpe | 785d Max DD (%) | Calmar | NW $t$-stat | Pre-Pub 728d Sharpe |
 |---|---:|---:|---:|---:|---:|---:|
 | `static_equal_weight` | +150.75 | 1.87 | -16.26 | 3.28 | 2.95 | 1.89 |
 | `volatility_targeted_15pct` | +91.00 | 1.85 | -12.54 | 2.80 | 2.79 | 1.91 |
-| **`inv_vol_funding_squeeze_gated`** | **+163.88** | **2.19** | -14.88 | 3.83 | **3.23** | **2.23** |
-| **`inv_vol_funding_gated_voltarget_15pct`** | +96.95 | **2.12** | **-8.55** | **4.33** | **3.13** | **2.18** |
+| `inv_vol_funding_squeeze_gated` | +163.88 | 2.19 | -14.88 | 3.83 | 3.23 | 2.23 |
+| `inv_vol_funding_gated_voltarget_15pct` | +96.95 | 2.12 | -8.55 | 4.33 | 3.13 | 2.18 |
+
+Overlay re-weighting charged at 5 bp per side on |Δ allocation| × gross exposure, on the
+same published factor NAVs (`evaluate_real_785d_perp_nav()` in `pipeline.py`, the default
+since 2026-10-26; still upper bounds because the factor NAVs are under-charged):
+
+| Strategy | 785d Cum Return (%) | 785d Sharpe | 785d Max DD (%) | Calmar | Overlay cost (%/yr) |
+|---|---:|---:|---:|---:|---:|
+| `static_equal_weight` | +150.75 | 1.87 | -16.26 | 3.28 | 0.00 |
+| `volatility_targeted_15pct` | +86.41 | 1.79 | -12.83 | 2.62 | 1.13 |
+| `inv_vol_funding_squeeze_gated` | +147.52 | 2.05 | -14.93 | 3.51 | 2.98 |
+| `inv_vol_funding_gated_voltarget_15pct` | +86.57 | 1.96 | -9.25 | 3.64 | 2.52 |
+
+The repository's own stress test of `inv_vol_funding_gated_voltarget_15pct`
+([`reports/LIVE_READINESS_AUDIT_2026-10.md`](reports/LIVE_READINESS_AUDIT_2026-10.md) §2,
+`reports/live_readiness_2026_10/v2_composite_delay_cost_stress.csv`, 835 days through
+2026-10-20) is the most conservative published reading of this strategy:
+
+| Execution | Cost (bp) | 835d Cum (%) | 835d Sharpe | 835d Max DD (%) |
+|---|---:|---:|---:|---:|
+| Close of the signal day | 5 | +72.34 | 1.48 | -14.32 |
+| 1-minute delay (00:01 UTC) | 5 | +70.76 | 1.46 | -15.13 |
+| 1-minute delay (00:01 UTC) | 15 | +53.14 | 1.18 | -15.83 |
+| 1-minute delay (00:01 UTC) | 30 | +28.26 | 0.72 | -18.39 |
+| 1-minute delay (00:01 UTC) | 50 | +1.14 | 0.11 | -24.83 |
+| Next-day close | 15 | +54.92 | 1.23 | -14.79 |
+
+The script that produced the audit is not committed and its cost convention ("bp per
+trade") is not documented, so it cannot be reproduced from this repository either; at
+5 bp it already sits well below the 1.69 that `reports/latest_oos_2026_10_composite.csv`
+reports for the same 835 days. Recomputing all of the above with the corrected cost
+formula is pending access to the raw panels.
 
 ## Limitations
 
-- Fills at the next close, no market impact, equal weights within quintiles, about five
-  names per leg in the large-coin pool.
+- Fills at the same daily close that completes the signal (no execution lag), no market
+  impact, equal weights within quintiles, about five names per leg in the large-coin pool.
+  The 2026-10 audit reruns the main signals with 1-minute, 12-hour and next-day delays.
+- Published long–short tables under-charge costs (about 2.5 bp instead of 5 bp per
+  side; see the erratum above) and have not yet been regenerated.
 - The 2024–26 sample is an altcoin bear market; part of the range factor's Sharpe is
   bear-market defence.
 - OKX funding history via `ccxt` reaches back only about three months, so the
@@ -137,8 +208,8 @@ python make_charts_postpub.py                           # equity_postpub.png
 ## Files
 
 The research write-ups are in Chinese: [`README_zh.md`](README_zh.md) (full detail),
-[`REPORT.md`](REPORT.md), [`reports/UPDATE_2026-07.md`](reports/UPDATE_2026-07.md),
-[`reports/UPDATE_2026-08.md`](reports/UPDATE_2026-08.md), [`reports/UPDATE_2026-09.md`](reports/UPDATE_2026-09.md) and [`reports/UPDATE_2026-10.md`](reports/UPDATE_2026-10.md). Result tables are in `data/results/` and `reports/`; figures are in `reports/figures/`.
+[`reports/REPORT.md`](reports/REPORT.md), [`reports/UPDATE_2026-07.md`](reports/UPDATE_2026-07.md),
+[`reports/UPDATE_2026-08.md`](reports/UPDATE_2026-08.md), [`reports/UPDATE_2026-09.md`](reports/UPDATE_2026-09.md) and [`reports/UPDATE_2026-10.md`](reports/UPDATE_2026-10.md); the cost, delay and hedge stress tests are in [`reports/LIVE_READINESS_AUDIT_2026-10.md`](reports/LIVE_READINESS_AUDIT_2026-10.md). Result tables are in `data/results/` and `reports/`; figures are in `reports/figures/`.
 
 Research period: June–September 2026. Source series: Kaiyuan Securities (开源证券)
 financial-engineering *Market Microstructure Research* series; the reports themselves

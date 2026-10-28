@@ -15,6 +15,7 @@ import os
 import numpy as np
 import pandas as pd
 from crypto_factors.backtest import metrics, QUANTILE, COST_BPS
+from crypto_factors.costs import cost_from_traded, long_short_traded_notional
 from crypto_factors.backtest_perp import build_panel, BIG_POOL
 
 ANN = 365
@@ -57,11 +58,11 @@ def conditional_sort(panel):
             if len(L) == 0 or len(S) == 0:
                 continue
             cl, cs = set(L["sym"]), set(S["sym"])
-            to = (len(cl ^ pl) + len(cs ^ ps)) / max(len(cl) + len(cs), 1)
+            traded = long_short_traded_notional(pl, cl, ps, cs)   # 两腿实际成交名义
             ff = lambda d: (0.0 if pd.isna(d["fwd_fund"].mean()) else d["fwd_fund"].mean())
             fund_pnl = ff(S) - ff(L)            # 空腿收, 多腿付 (计提资金费)
             rows.append((L["fwd_ret"].mean() - S["fwd_ret"].mean())
-                        - to * COST_BPS / 1e4 + fund_pnl)
+                        - cost_from_traded(traded, COST_BPS) + fund_pnl)
             pl, ps = cl, cs
         return np.array(rows)
 

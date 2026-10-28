@@ -1,4 +1,8 @@
-data/raw/
+data/*
+# Small fixtures and published result tables read by the tests.
+!data/DATA_ACCESS.md
+!data/fixtures/
+!data/results/
 data_*/
 __pycache__/
 *.pyc

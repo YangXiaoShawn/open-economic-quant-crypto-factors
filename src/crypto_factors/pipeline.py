@@ -13,6 +13,7 @@ from crypto_factors.config import (
     DEFAULT_TARGET_VOL,
     PROJECT_ROOT,
 )
+from crypto_factors.costs import overlay_rebalance_costs
 
 MONOREPO_CORE = PROJECT_ROOT.parent / "packages" / "oeq-core" / "src"
 if MONOREPO_CORE.exists() and str(MONOREPO_CORE) not in sys.path:
@@ -61,8 +62,21 @@ def _series_metrics(returns: list[float]) -> dict[str, float]:
     }
 
 
-def evaluate_real_785d_perp_nav(root: Path = PROJECT_ROOT) -> dict[str, object]:
-    """Evaluate 785-day real Binance perpetual futures factor NAV series (2024-06-03 to 2026-07-27)."""
+def evaluate_real_785d_perp_nav(
+    root: Path = PROJECT_ROOT,
+    rebalance_cost_bps_per_side: float = DEFAULT_COST_BPS_PER_SIDE,
+) -> dict[str, object]:
+    """Evaluate 785-day real Binance perpetual futures factor NAV series (2024-06-03 to 2026-07-27).
+
+    The three sleeve NAVs in ``equity_perp.csv`` are taken as published. The overlays
+    (inverse-vol weights, funding-squeeze gate, vol target up to 1.5x) are charged
+    ``rebalance_cost_bps_per_side`` on the gross notional they trade when sleeve
+    allocations change (see ``costs.overlay_rebalance_costs``). Before 2026-10-26 the
+    overlays were charged nothing; ``rebalance_cost_bps_per_side=0`` reproduces the
+    published table. Caveat: the sleeve NAVs themselves were produced by the
+    pre-2026-10-26 long-short cost formula, which charged about half of the stated
+    5 bp per side, so every figure here is still an upper bound.
+    """
     nav_path = root / "data" / "results" / "equity_perp.csv"
     with nav_path.open("r", encoding="utf-8") as fh:
         rows = list(csv.DictReader(fh))
@@ -75,9 +89,13 @@ def evaluate_real_785d_perp_nav(root: Path = PROJECT_ROOT) -> dict[str, object]:
     n = len(rets[core3[0]])
     ew_daily = [sum(rets[c][t] for c in core3) / 3.0 for t in range(n)]
     vw_ew = volatility_target_weights(ew_daily, target_vol=0.15, lookback=20, max_leverage=1.5, annualization=365.0)
-    ew_vt = [ew_daily[t] * vw_ew[t] for t in range(n)]
+    ew_vt_cost = overlay_rebalance_costs(
+        [{c: vw_ew[t] / 3.0 for c in core3} for t in range(n)], rebalance_cost_bps_per_side
+    )
+    ew_vt = [ew_daily[t] * vw_ew[t] - ew_vt_cost[t] for t in range(n)]
 
-    inv_gated: list[float] = []
+    inv_gross: list[float] = []
+    inv_weights: list[dict[str, float]] = []
     for t in range(n):
         if t < 20:
             w = {c: 1.0 / 3.0 for c in core3}
@@ -88,10 +106,17 @@ def evaluate_real_785d_perp_nav(root: Path = PROJECT_ROOT) -> dict[str, object]:
                 w["资金费率"] *= 0.25
                 s = sum(w.values())
                 w = {c: w[c] / s for c in core3}
-        inv_gated.append(sum(w[c] * rets[c][t] for c in core3))
+        inv_weights.append(w)
+        inv_gross.append(sum(w[c] * rets[c][t] for c in core3))
 
-    vw_ig = volatility_target_weights(inv_gated, target_vol=0.15, lookback=20, max_leverage=1.5, annualization=365.0)
-    inv_gated_vt = [inv_gated[t] * vw_ig[t] for t in range(n)]
+    # The vol target is sized on the gross overlay series, exactly as published.
+    vw_ig = volatility_target_weights(inv_gross, target_vol=0.15, lookback=20, max_leverage=1.5, annualization=365.0)
+    inv_cost = overlay_rebalance_costs(inv_weights, rebalance_cost_bps_per_side)
+    inv_vt_cost = overlay_rebalance_costs(
+        [{c: vw_ig[t] * inv_weights[t][c] for c in core3} for t in range(n)], rebalance_cost_bps_per_side
+    )
+    inv_gated = [inv_gross[t] - inv_cost[t] for t in range(n)]
+    inv_gated_vt = [inv_gross[t] * vw_ig[t] - inv_vt_cost[t] for t in range(n)]
 
     st_ew = _series_metrics(ew_daily)
     st_vt = _series_metrics(ew_vt)
@@ -100,14 +125,27 @@ def evaluate_real_785d_perp_nav(root: Path = PROJECT_ROOT) -> dict[str, object]:
 
     return {
         "real_perp_days": n,
+        "real_785d_overlay_cost_bps_per_side": float(rebalance_cost_bps_per_side),
         "real_785d_static_sharpe": st_ew["sharpe"],
         "real_785d_static_max_dd_pct": st_ew["max_dd_pct"],
         "real_785d_voltarget_sharpe": st_vt["sharpe"],
+        "real_785d_voltarget_cum_ret_pct": st_vt["cum_ret_pct"],
+        "real_785d_voltarget_max_dd_pct": st_vt["max_dd_pct"],
+        "real_785d_voltarget_calmar": st_vt["calmar"],
         "real_785d_inv_vol_gated_sharpe": st_ig["sharpe"],
         "real_785d_inv_vol_gated_cum_ret_pct": st_ig["cum_ret_pct"],
+        "real_785d_inv_vol_gated_max_dd_pct": st_ig["max_dd_pct"],
+        "real_785d_inv_vol_gated_calmar": st_ig["calmar"],
         "real_785d_inv_vol_vt_sharpe": st_ig_vt["sharpe"],
+        "real_785d_inv_vol_vt_cum_ret_pct": st_ig_vt["cum_ret_pct"],
         "real_785d_inv_vol_vt_max_dd_pct": st_ig_vt["max_dd_pct"],
         "real_785d_inv_vol_vt_calmar": st_ig_vt["calmar"],
+        "real_785d_inv_vol_vt_nw_t": st_ig_vt["nw_t"],
+        "real_785d_overlay_cost_ann_pct": {
+            "volatility_targeted_15pct": round(sum(ew_vt_cost) / n * 365.0 * 100.0, 2),
+            "inv_vol_funding_squeeze_gated": round(sum(inv_cost) / n * 365.0 * 100.0, 2),
+            "inv_vol_funding_gated_voltarget_15pct": round(sum(inv_vt_cost) / n * 365.0 * 100.0, 2),
+        },
     }
 
 
@@ -187,7 +225,11 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
         max_leverage=1.5,
         annualization=365.0,
     )
-    vol_targeted_returns = [r * w for r, w in zip(static_comp_returns, vol_weights)]
+    # Leverage changes of the vol target trade the whole long-short composite (gross 2 per unit).
+    leverage_costs = overlay_rebalance_costs(
+        [{"composite": w} for w in vol_weights], DEFAULT_COST_BPS_PER_SIDE
+    )
+    vol_targeted_returns = [r * w - c for r, w, c in zip(static_comp_returns, vol_weights, leverage_costs)]
 
     boundary = ClaimBoundary(
         project_slug="crypto-factors",
@@ -218,7 +260,7 @@ def run_sample_pipeline(root: Path = PROJECT_ROOT) -> dict[str, object]:
         for i, name in enumerate(factor_names)
     }
 
-    regime_vol_targeted = [r * w for r, w in zip(regime_comp_returns, vol_weights)]
+    regime_vol_targeted = [r * w - c for r, w, c in zip(regime_comp_returns, vol_weights, leverage_costs)]
     real_perp_summary = evaluate_real_785d_perp_nav(root=root)
 
     return {
