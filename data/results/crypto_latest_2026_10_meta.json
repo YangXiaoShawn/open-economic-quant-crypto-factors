@@ -1,0 +1,74 @@
+{
+  "panel_coins": 105,
+  "panel_days": 873,
+  "panel_start": "2024-06-01",
+  "panel_end": "2026-10-21",
+  "return_end": "2026-10-20",
+  "funding_dump_end": "2026-09-30",
+  "oi_end": "2026-10-21",
+  "oct_live_funding_extension": {
+    "② 单因子多空 (理想口径, 单边5bps) | 资金费率(大)": {
+      "oct_mtd_pct": 3.38,
+      "oct_mdd_pct": -5.7,
+      "oct_days": 20,
+      "sep1_to_oct20_pct": 8.65,
+      "sep1_to_oct20_mdd_pct": -10.16,
+      "sep1_to_oct20_days": 50,
+      "sep29_to_oct20_pct": 5.03
+    },
+    "③a 多空·计提 funding | 资金费率": {
+      "oct_mtd_pct": 3.75,
+      "oct_mdd_pct": -5.58,
+      "oct_days": 20,
+      "sep1_to_oct20_pct": 9.88,
+      "sep1_to_oct20_mdd_pct": -10.02,
+      "sep1_to_oct20_days": 50,
+      "sep29_to_oct20_pct": 5.43
+    },
+    "③b 纯多头现货超额 | 资金费率": {
+      "oct_mtd_pct": 2.85,
+      "oct_mdd_pct": -2.31,
+      "oct_days": 20,
+      "sep1_to_oct20_pct": 12.05,
+      "sep1_to_oct20_mdd_pct": -4.38,
+      "sep1_to_oct20_days": 50,
+      "sep29_to_oct20_pct": 3.12
+    },
+    "④ 可交付产品 (周调仓·15bps) | 产品A·宽池top15·纯现货多头": {
+      "oct_mtd_pct": -9.63,
+      "oct_mdd_pct": -15.53,
+      "oct_days": 20,
+      "sep1_to_oct20_pct": 17.51,
+      "sep1_to_oct20_mdd_pct": -15.53,
+      "sep1_to_oct20_days": 50,
+      "sep29_to_oct20_pct": -8.08
+    },
+    "④ 可交付产品 (周调仓·15bps) | 产品A·宽池top15·对冲beta": {
+      "oct_mtd_pct": -4.45,
+      "oct_mdd_pct": -5.07,
+      "oct_days": 20,
+      "sep1_to_oct20_pct": -9.49,
+      "sep1_to_oct20_mdd_pct": -9.28,
+      "sep1_to_oct20_days": 50,
+      "sep29_to_oct20_pct": -3.34
+    },
+    "④ 可交付产品 (周调仓·15bps) | 产品B·大币top8·纯现货多头": {
+      "oct_mtd_pct": -1.76,
+      "oct_mdd_pct": -7.96,
+      "oct_days": 20,
+      "sep1_to_oct20_pct": 35.12,
+      "sep1_to_oct20_mdd_pct": -8.38,
+      "sep1_to_oct20_days": 50,
+      "sep29_to_oct20_pct": -1.43
+    },
+    "④ 可交付产品 (周调仓·15bps) | 产品B·大币top8·对冲beta": {
+      "oct_mtd_pct": 2.7,
+      "oct_mdd_pct": -2.02,
+      "oct_days": 20,
+      "sep1_to_oct20_pct": 4.21,
+      "sep1_to_oct20_mdd_pct": -6.22,
+      "sep1_to_oct20_days": 50,
+      "sep29_to_oct20_pct": 3.49
+    }
+  }
+}
